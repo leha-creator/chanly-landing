@@ -1,0 +1,50 @@
+// V3.4: desktop 108:460, mobile 113:691. Control metrics come from the navigation and contact form.
+:root {
+  --paper: #f4f2eb;
+  --ink: #20221f;
+  --white: #fff;
+  --accent: #514fde;
+  --highlight: #e4ee9c;
+  --on-accent: #ddddfc;
+  --focus: #2e2ca2;
+  --error: #862222;
+  --font-body: 'Inter Variable', sans-serif;
+  --font-display: 'Lora Variable', Georgia, serif;
+  --gutter: 64px;
+  --gap: 8px;
+  --button-radius: 28px;
+  --button-height: 56px;
+  --button-width: 248px;
+  --button-inset: 24px;
+  --button-font: 16px;
+  --field-height: 56px;
+  --field-radius: 4px;
+  --field-inset: 16px;
+  --field-font: 16px;
+  --field-bg: var(--paper);
+  --placeholder: #787a70;
+  --motion-fast: 150ms;
+  --ease: ease-out;
+  --layer-sticky: 10;
+  --layer-notice: 20;
+}
+
+@media (max-width: 48rem) {
+  :root {
+    --gutter: 20px;
+    --button-height: 44px;
+    --button-width: 170px;
+    --button-inset: 12px;
+    --button-font: 14px;
+    --field-height: 49px;
+    --field-radius: 8px;
+    --field-inset: 13px;
+    --field-font: 15px;
+    --field-bg: var(--white);
+    --placeholder: #1f211f;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0s; }
+}

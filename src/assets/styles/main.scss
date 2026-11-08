@@ -1,0 +1,17 @@
+@use 'tokens';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/lora/wght-italic.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--font-body);
+}
+button, input { font: inherit; }
+h1 {
+  margin: 0;
+  padding: var(--gutter);
+  font: italic 400 clamp(46px, 7vw, 90px)/1.12 var(--font-display);
+}
