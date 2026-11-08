@@ -1,5 +1,6 @@
 @use 'tokens';
 @import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/manrope/wght.css';
 @import '@fontsource-variable/lora/wght-italic.css';
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -10,8 +11,15 @@ body {
   font: 400 1rem/1.5 var(--font-body);
 }
 button, input { font: inherit; }
-h1 {
-  margin: 0;
-  padding: var(--gutter);
-  font: italic 400 clamp(46px, 7vw, 90px)/1.12 var(--font-display);
-}
+h1,h2,h3 { margin:0; font:700 1em/1.12 var(--font-heading); letter-spacing:-.04em; }
+h2 { font-size:clamp(34px,3.65vw,56px); }
+p { margin:12px 0; }
+a { color:inherit; text-underline-offset:.2em; }
+:focus-visible { outline:3px solid currentColor;outline-offset:3px; }
+.slice { padding:80px var(--gutter); }
+.wrap { max-width:1440px;margin-inline:auto; }
+.split { display:grid;grid-template-columns:1fr 1.1fr;gap:6%; }
+.dark { background:var(--ink);color:var(--paper); }
+button.lime { background:var(--highlight);color:var(--ink); }
+button.lime:enabled:hover { background:white;color:var(--ink); }
+@media(max-width:48rem){.slice{padding:40px var(--gutter)}.split{grid-template-columns:1fr;gap:24px}}
