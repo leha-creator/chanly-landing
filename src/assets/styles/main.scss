@@ -20,6 +20,10 @@ a { color:inherit; text-underline-offset:.2em; }
 .wrap { max-width:1440px;margin-inline:auto; }
 .split { display:grid;grid-template-columns:1fr 1.1fr;gap:6%; }
 .dark { background:var(--ink);color:var(--paper); }
+@media(prefers-reduced-motion:no-preference){
+  [data-reveal]{transition:opacity var(--reveal-time) var(--reveal-ease),translate var(--reveal-time) var(--reveal-ease);transition-delay:calc(var(--order,0) * var(--reveal-step))}
+  [data-waiting] [data-reveal]{opacity:0;translate:0 var(--reveal-rise)}
+}
 button.lime { background:var(--highlight);color:var(--ink); }
 button.lime:enabled:hover { background:white;color:var(--ink); }
 @media(max-width:48rem){.slice{padding:40px var(--gutter)}.split{grid-template-columns:1fr;gap:24px}}
