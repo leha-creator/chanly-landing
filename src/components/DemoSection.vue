@@ -1,28 +1,74 @@
 <script setup>
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useLandingMotion } from '../stores/landingMotion.js'
 import { useSectionReveal } from '../composables/useSectionReveal.js'
+import connectScreen from '../assets/images/demo-connect.png'
+import channelsScreen from '../assets/images/demo-channels.png'
+import ordersScreen from '../assets/images/demo-orders.png'
+import paymentsScreen from '../assets/images/demo-payments.png'
 useSectionReveal()
 const steps = [
-  [
-    'Подключите канал',
-    'Добавьте бота и подтвердите канал одноразовым кодом.',
-    'Подключение',
-  ],
-  [
-    'Задайте форматы и цены',
-    'Управляйте каналами и условиями размещения.',
-    'Форматы и цены',
-  ],
-  [
-    'Примите заказ',
-    'Изучите запрос, согласуйте публикацию и следите за статусом.',
-    'Размещение',
-  ],
-  [
-    'Получите выплату',
-    'После приёмки заказа проверьте выплату и документы.',
-    'Выплата',
-  ],
+  {
+    title: 'Подключите канал',
+    description: 'Добавьте бота и подтвердите канал одноразовым кодом.',
+    label: 'Подключение',
+    image: connectScreen,
+    screen: 'Подключение канала',
+  },
+  {
+    title: 'Задайте форматы и цены',
+    description: 'Управляйте каналами и условиями размещения.',
+    label: 'Форматы и цены',
+    image: channelsScreen,
+    screen: 'Мои каналы',
+  },
+  {
+    title: 'Примите заказ',
+    description: 'Изучите запрос, согласуйте публикацию и следите за статусом.',
+    label: 'Размещение',
+    image: ordersScreen,
+    screen: 'Запросы и размещения',
+  },
+  {
+    title: 'Получите выплату',
+    description: 'После приёмки заказа проверьте выплату и документы.',
+    label: 'Выплата',
+    image: paymentsScreen,
+    screen: 'Выплаты',
+  },
 ]
+
+const active = ref(0)
+const cycle = ref(0)
+const duration = 20_000
+const motion = useLandingMotion()
+const preference = globalThis.matchMedia('(prefers-reduced-motion: reduce)')
+const reduced = ref(preference.matches)
+const playing = computed(() => Boolean(motion.shown.how) && !reduced.value)
+const current = computed(() => steps[active.value])
+let timer
+
+function select(index) {
+  active.value = (index + steps.length) % steps.length
+  restart()
+}
+
+function restart() {
+  globalThis.clearTimeout(timer)
+  cycle.value++
+  if (playing.value) timer = globalThis.setTimeout(() => select(active.value + 1), duration)
+}
+
+function updatePreference() {
+  reduced.value = preference.matches
+}
+
+watch(playing, restart, { immediate: true })
+onMounted(() => preference.addEventListener('change', updatePreference))
+onUnmounted(() => {
+  preference.removeEventListener('change', updatePreference)
+  globalThis.clearTimeout(timer)
+})
 </script>
 <template>
   <section ref="section" id="how" class="slice dark">
@@ -31,121 +77,129 @@ const steps = [
       <div class="demo">
         <div class="steps">
           <div class="mobile-index">
-            <span v-for="(_, i) in steps" :key="i">0{{ i + 1 }}</span>
+            <button v-for="(step, i) in steps" :key="step.label" type="button"
+              :aria-label="step.title" :aria-current="active === i ? 'step' : undefined" @click="select(i)">0{{ i + 1 }}</button>
           </div>
-          <article data-reveal v-for="([title, copy], i) in steps" :key="title">
-            <h3>0{{ i + 1 }} {{ title }}</h3>
-            <p>{{ copy }}</p>
+          <article data-reveal v-for="({ title, description }, i) in steps" :key="title" :class="{ selected: active === i }">
+            <h3><button type="button" :aria-current="active === i ? 'step' : undefined" @click="select(i)">0{{ i + 1 }}<span>{{ title }}</span></button></h3>
+            <p>{{ description }}</p>
           </article>
         </div>
         <figure data-reveal>
-          <img
-            src="../assets/images/dashboard.jpg"
-            alt="Кабинет Chanly: подключение канала"
-            width="880"
-            height="619"
-          />
-          <figcaption>
-            Подключение канала в Chanly · демонстрационные данные
-          </figcaption>
+          <img :src="current.image" :alt="'Кабинет Chanly — ' + current.screen" width="880" height="619" />
+          <figcaption>{{ current.screen }} в Chanly · демонстрационные данные</figcaption>
         </figure>
       </div>
-      <div data-reveal class="progress">
-        <span v-for="(step, i) in steps" :key="step[2]"
-          >0{{ i + 1 }} <b>{{ step[2] }}</b></span
-        >
+      <div data-reveal class="progress" :style="{ '--period': duration + 'ms' }">
+        <button v-for="(step, i) in steps" :key="step.label" type="button" :aria-current="active === i ? 'step' : undefined" @click="select(i)">
+          <span class="bar" aria-hidden="true"><i v-if="active === i" :key="cycle" :class="{ playing }"></i></span>
+          0{{ i + 1 }}&ensp;{{ step.label }}
+        </button>
+      </div>
+      <div class="mobile-controls" data-reveal>
+        <button type="button" @click="select(active - 1)">← Назад</button>
+        <button type="button" @click="select(active + 1)">Далее →</button>
       </div>
     </div>
   </section>
 </template>
+
 <style scoped lang="scss">
+h2 {
+  font-size: clamp(34px, 3.62vw, 52px);
+  letter-spacing: -.03em;
+  color: var(--white);
+}
 .demo {
   display: grid;
-  grid-template-columns: 360fr 912fr;
-  gap: 3%;
-  align-items: start;
+  grid-template-columns: minmax(0, 360fr) minmax(0, 912fr);
+  gap: clamp(20px, 2.78vw, 40px);
+  align-items: center;
   margin: 40px 0;
 }
-.steps {
-  display: grid;
-  gap: 12px;
-}
-article,
-figure {
-  border: 1px solid #63655c;
-  border-radius: 14px;
-  padding: 16px;
-}
-article:first-of-type {
-  background: var(--highlight);
-  color: var(--ink);
+.steps { display: grid; gap: 12px; }
+article {
+  padding: 20px;
+  min-height: 117px;
+  color: var(--white);
 }
 h3 {
-  font-size: 20px;
+  font: 500 18px/1.5 var(--font-body);
+  letter-spacing: normal;
+  span { margin-inline-start: .8em; }
 }
 article p {
-  font-size: 15px;
-  margin: 0.5rem 0 0;
+  margin: 8px 0 0;
+  color: #b7bbaf;
+  font: 400 14px/1.5 var(--font-body);
 }
-figure {
-  margin: 0;
-  background: #32352f;
+article.selected {
+  border-radius: 16px;
+  background: var(--highlight);
+  color: var(--ink);
+  p { color: #62665c; }
 }
-img {
+figure { margin: 0; padding: 16px; }
+img { display: block; width: 100%; height: auto; border-radius: 12px; }
+figcaption { margin-top: 12px; color: #b7bbaf; font-size: 12px; }
+.progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 16px;
+  color: #b7bbaf;
+  font: 500 14px/1.5 var(--font-body);
+}
+.bar {
   display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
+  margin-bottom: 12px;
+  height: 4px;
+  background: #494c43;
+  border-radius: 2px;
 }
-figcaption {
-  margin-top: 10px;
-  font-size: 13px;
-}
-.progress,
-.mobile-index {
-  display: flex;
-  gap: 12px;
-}
-.progress span,
-.mobile-index span {
-  flex: 1;
-  border-top: 2px solid #777;
-  padding-top: 8px;
-  font-size: 14px;
-}
-.progress span:first-child {
-  border-color: var(--highlight);
-}
-.mobile-index {
-  display: none;
-}
+button { border: 0; background: transparent; color: inherit; font: inherit; padding: 0; text-align: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+article { position: relative; }
+h3 button::after { content: ''; position: absolute; inset: 0; }
+.progress [aria-current] { color: var(--highlight); }
+.bar { overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--highlight); transform-origin: left; }
+.bar i.playing { animation: fill var(--period) linear both; }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.mobile-index, .mobile-controls { display: none; }
+
 @media (max-width: 48rem) {
-  .demo {
+  h2 { line-height: 1.09; }
+  .demo { grid-template-columns: 1fr; margin: 20px 0 16px; gap: 16px; }
+  .steps { gap: 16px; }
+  .mobile-index, .mobile-controls {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin: 20px 0;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 8px;
   }
-  .mobile-index {
-    display: flex;
-  }
-  .steps article {
-    display: none;
-  }
-  .steps article:first-of-type {
-    display: block;
-    background: none;
-    color: inherit;
+  .mobile-index button, .mobile-controls button {
+    text-align: center;
+    padding: 11px 0;
     border: 0;
+    border-radius: 12px;
+    color: white;
+    background: #383b38;
+    font: 500 16px/22px var(--font-body);
+  }
+  .mobile-index [aria-current] { background: var(--highlight); color: var(--ink); }
+  .mobile-controls button { font-size: 14px; }
+  article { display: none; }
+  article.selected {
+    display: block;
+    min-height: 0;
     padding: 0;
+    background: transparent;
+    color: white;
+    h3 { font-size: 22px; line-height: 1.4; }
+    p { margin-top: 16px; color: inherit; font-size: 16px; line-height: 1.4; }
   }
-  figure {
-    padding: 0;
-    border: none;
-  }
-  figcaption,
-  .progress b {
-    display: none;
-  }
+  figure { padding: 0; }
+  img { border-radius: 5px; }
+  figcaption, .progress { display: none; }
 }
 </style>
