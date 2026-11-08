@@ -1,0 +1,28 @@
+name: Проверка лендинга
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@v4
+      - name: Настроить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Установить зависимости
+        run: npm ci
+      - name: Проверить код
+        run: npm run lint
+      - name: Проверить компоненты
+        run: npm test
+      - name: Собрать сайт
+        run: npm run build
+      - name: Проверить точку входа сборки
+        run: test -s dist/index.html
