@@ -1,9 +1,151 @@
 <script setup>
 import { useSectionReveal } from '../composables/useSectionReveal.js'
 useSectionReveal()
-const steps=[['Подключите канал','Добавьте бота и подтвердите канал одноразовым кодом.','Подключение'],['Задайте форматы и цены','Управляйте каналами и условиями размещения.','Форматы и цены'],['Примите заказ','Изучите запрос, согласуйте публикацию и следите за статусом.','Размещение'],['Получите выплату','После приёмки заказа проверьте выплату и документы.','Выплата']]
+const steps = [
+  [
+    'Подключите канал',
+    'Добавьте бота и подтвердите канал одноразовым кодом.',
+    'Подключение',
+  ],
+  [
+    'Задайте форматы и цены',
+    'Управляйте каналами и условиями размещения.',
+    'Форматы и цены',
+  ],
+  [
+    'Примите заказ',
+    'Изучите запрос, согласуйте публикацию и следите за статусом.',
+    'Размещение',
+  ],
+  [
+    'Получите выплату',
+    'После приёмки заказа проверьте выплату и документы.',
+    'Выплата',
+  ],
+]
 </script>
-<template><section ref="section" id="how" class="slice dark"><div class="wrap"><h2 data-reveal>От подключения канала<br>до первой выплаты</h2><div class="demo"><div class="steps"><div class="mobile-index"><span v-for="(_,i) in steps" :key="i">0{{ i+1 }}</span></div><article data-reveal v-for="([title,copy],i) in steps" :key="title"><h3>0{{ i+1 }} {{ title }}</h3><p>{{ copy }}</p></article></div><figure data-reveal><img src="../assets/images/dashboard.jpg" alt="Кабинет Chanly: подключение канала" width="880" height="619"><figcaption>Подключение канала в Chanly · демонстрационные данные</figcaption></figure></div><div data-reveal class="progress"><span v-for="(step,i) in steps" :key="step[2]">0{{ i+1 }} <b>{{ step[2] }}</b></span></div></div></section></template>
+<template>
+  <section ref="section" id="how" class="slice dark">
+    <div class="wrap">
+      <h2 data-reveal>От подключения канала<br />до первой выплаты</h2>
+      <div class="demo">
+        <div class="steps">
+          <div class="mobile-index">
+            <span v-for="(_, i) in steps" :key="i">0{{ i + 1 }}</span>
+          </div>
+          <article data-reveal v-for="([title, copy], i) in steps" :key="title">
+            <h3>0{{ i + 1 }} {{ title }}</h3>
+            <p>{{ copy }}</p>
+          </article>
+        </div>
+        <figure data-reveal>
+          <img
+            src="../assets/images/dashboard.jpg"
+            alt="Кабинет Chanly: подключение канала"
+            width="880"
+            height="619"
+          />
+          <figcaption>
+            Подключение канала в Chanly · демонстрационные данные
+          </figcaption>
+        </figure>
+      </div>
+      <div data-reveal class="progress">
+        <span v-for="(step, i) in steps" :key="step[2]"
+          >0{{ i + 1 }} <b>{{ step[2] }}</b></span
+        >
+      </div>
+    </div>
+  </section>
+</template>
 <style scoped lang="scss">
-.demo{display:grid;grid-template-columns:360fr 912fr;gap:3%;align-items:start;margin:40px 0}.steps{display:grid;gap:12px}article,figure{border:1px solid #63655c;border-radius:14px;padding:16px}article:first-of-type{background:var(--highlight);color:var(--ink)}h3{font-size:20px}article p{font-size:15px;margin:.5rem 0 0}figure{margin:0;background:#32352f}img{display:block;width:100%;height:auto;border-radius:8px}figcaption{margin-top:10px;font-size:13px}.progress,.mobile-index{display:flex;gap:12px}.progress span,.mobile-index span{flex:1;border-top:2px solid #777;padding-top:8px;font-size:14px}.progress span:first-child{border-color:var(--highlight)}.mobile-index{display:none}@media(max-width:48rem){.demo{display:grid;grid-template-columns:1fr;gap:20px;margin:20px 0}.mobile-index{display:flex}.steps article{display:none}.steps article:first-of-type{display:block;background:none;color:inherit;border:0;padding:0}figure{padding:0;border:none}figcaption,.progress b{display:none}}
+.demo {
+  display: grid;
+  grid-template-columns: 360fr 912fr;
+  gap: 3%;
+  align-items: start;
+  margin: 40px 0;
+}
+.steps {
+  display: grid;
+  gap: 12px;
+}
+article,
+figure {
+  border: 1px solid #63655c;
+  border-radius: 14px;
+  padding: 16px;
+}
+article:first-of-type {
+  background: var(--highlight);
+  color: var(--ink);
+}
+h3 {
+  font-size: 20px;
+}
+article p {
+  font-size: 15px;
+  margin: 0.5rem 0 0;
+}
+figure {
+  margin: 0;
+  background: #32352f;
+}
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+}
+.progress,
+.mobile-index {
+  display: flex;
+  gap: 12px;
+}
+.progress span,
+.mobile-index span {
+  flex: 1;
+  border-top: 2px solid #777;
+  padding-top: 8px;
+  font-size: 14px;
+}
+.progress span:first-child {
+  border-color: var(--highlight);
+}
+.mobile-index {
+  display: none;
+}
+@media (max-width: 48rem) {
+  .demo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .mobile-index {
+    display: flex;
+  }
+  .steps article {
+    display: none;
+  }
+  .steps article:first-of-type {
+    display: block;
+    background: none;
+    color: inherit;
+    border: 0;
+    padding: 0;
+  }
+  figure {
+    padding: 0;
+    border: none;
+  }
+  figcaption,
+  .progress b {
+    display: none;
+  }
+}
 </style>

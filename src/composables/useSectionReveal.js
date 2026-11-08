@@ -16,12 +16,16 @@ export function useSectionReveal() {
     }
     if (preference.matches || !globalThis.IntersectionObserver) return show()
     const items = el.querySelectorAll('[data-reveal]')
-    items.forEach((item, index) => item.style.setProperty('--order', String(index)))
+    items.forEach((item, index) =>
+      item.style.setProperty('--order', String(index)),
+    )
     el.setAttribute('data-waiting', '')
-    const observer = new globalThis.IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) show()
+    const observer = new globalThis.IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) show()
     })
-    const onChange = () => { if (preference.matches) show() }
+    const onChange = () => {
+      if (preference.matches) show()
+    }
     preference.addEventListener('change', onChange)
     el.addEventListener('focusin', show)
     dispose = () => {

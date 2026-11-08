@@ -8,6 +8,8 @@ export const useLandingMotion = defineStore('landing-motion', {
       this.introPlayed = true
       return true
     },
-    show(id) { this.shown[id] = true },
+    show(id) {
+      this.shown[id] = true
+    },
   },
 })

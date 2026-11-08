@@ -29,7 +29,7 @@
   --reveal-time: 580ms;
   --reveal-step: 90ms;
   --reveal-rise: 18px;
-  --reveal-ease: cubic-bezier(.2,.7,.2,1);
+  --reveal-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease: ease-out;
   --layer-sticky: 10;
   --layer-notice: 20;
@@ -52,5 +52,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root { --motion-fast: 0s; }
+  :root {
+    --motion-fast: 0s;
+  }
 }

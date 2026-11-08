@@ -1,6 +1,6 @@
 # Лендинг Chanly
 
-Это отдельный репозиторий публичного сайта продукта Chanly. Основное приложение находится в `D:\work\maxim-frontend`. Здесь размещён каркас сайта на Vue 3.
+Это отдельный репозиторий публичного сайта продукта Chanly. Основное приложение находится в `D:\work\maxim-frontend`. Здесь размещён адаптивный лендинг на Vue 3.
 
 | Путь | Что здесь искать |
 | --- | --- |
@@ -8,6 +8,9 @@
 | [src/main.js](src/main.js), [src/App.vue](src/App.vue) | Подключение Router, Pinia, темы и общего каркаса |
 | [src/router/index.js](src/router/index.js), [src/views/](src/views/) | Маршруты и страницы |
 | [src/components/](src/components/), [src/assets/styles/](src/assets/styles/) | Общие компоненты и SCSS-тема |
+| [HomeView](src/views/HomeView.vue), [SiteLayout](src/layout/SiteLayout.vue) | Порядок секций, шапка, подвал и единый экземпляр Lenis |
+| [src/composables/](src/composables/), [src/stores/landingMotion.js](src/stores/landingMotion.js) | Якоря, действие подключения, появление секций и память показа |
+| [tests/motion/](tests/motion/), [tests/navigation/](tests/navigation/) | Проверки уменьшенного движения, повторного входа и якорей |
 | [tests/components/](tests/components/), [.github/workflows/ci.yml](.github/workflows/ci.yml) | Тесты компонентов и проверки pull request |
 | [.ai-factory/DESCRIPTION.md](.ai-factory/DESCRIPTION.md) | Стек и исходный макет Figma |
 | [.ai-factory/ROADMAP.md](.ai-factory/ROADMAP.md) | Этапы разработки и выпуска |
