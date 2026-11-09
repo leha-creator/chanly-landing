@@ -21,4 +21,9 @@ defineProps({ visible: Boolean })
   text-decoration: none;
   font-size: 24px;
 }
+@media (hover: hover) and (pointer: fine) {
+  .back:hover { background: var(--accent-hover); }
+}
+.back:active { background: var(--accent-pressed); }
+.back:focus-visible { outline-color: var(--accent); box-shadow: 0 0 0 3px white; }
 </style>

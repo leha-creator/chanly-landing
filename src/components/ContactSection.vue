@@ -130,7 +130,7 @@ textarea {
   width: 100%;
   margin-top: 8px;
   padding: 14px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: var(--field-radius);
   background: var(--field-bg);
   font: inherit;
@@ -138,7 +138,8 @@ textarea {
   resize: vertical;
 }
 .error { display: table; margin-top: 4px; background: var(--white); color: var(--error); padding-inline: 4px; font-size: 13px; }
-textarea[aria-invalid="true"] { outline: 2px solid var(--error); }
+textarea:focus { border-color: var(--accent); }
+textarea[aria-invalid="true"] { border-color: var(--error); }
 textarea { color: var(--ink); }
 .consent {
   display: flex;

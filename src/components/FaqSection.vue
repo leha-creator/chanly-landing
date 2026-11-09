@@ -54,6 +54,10 @@ button {
   font: inherit;
   cursor: pointer;
 }
+@media (hover: hover) and (pointer: fine) {
+  button:hover { color: var(--accent-hover); }
+}
+button:active { color: var(--accent-pressed); }
 button span { color: var(--accent); }
 .answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--motion-fast) var(--ease); }
 .answer.open { grid-template-rows: 1fr; }

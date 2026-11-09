@@ -25,25 +25,25 @@ defineProps({
   padding: 6px var(--button-inset);
   border: 0;
   border-radius: var(--button-radius);
-  background: var(--ink);
+  background: var(--accent);
   color: var(--white);
   font: 500 var(--button-font)/1.5 var(--font-body);
   cursor: pointer;
   transition: background-color var(--motion-fast) var(--ease);
 
-  &:enabled:hover { background: var(--accent); }
-  &:enabled:active { background: var(--focus); }
-  &:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 3px;
-    box-shadow: 0 0 0 3px var(--white);
+  @media (hover: hover) and (pointer: fine) {
+    &:enabled:hover { background: var(--accent-hover); }
   }
+  &:enabled:active { background: var(--accent-pressed); }
   &:disabled { opacity: .65; cursor: default; }
   &[aria-busy='true'] { cursor: progress; }
   &.lime {
     background: var(--highlight);
     color: var(--ink);
-    &:enabled:hover { background: var(--white); }
+    @media (hover: hover) and (pointer: fine) {
+      &:enabled:hover { background: #d7e78b; }
+    }
+    &:enabled:active { background: #c4d775; }
   }
 }
 </style>

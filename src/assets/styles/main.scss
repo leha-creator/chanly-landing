@@ -36,8 +36,23 @@ a {
   text-underline-offset: 0.2em;
 }
 :focus-visible {
-  outline: 3px solid currentColor;
+  outline: 3px solid var(--focus-ring, var(--focus));
   outline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  nav a:hover, footer a:hover {
+    color: var(--link-hover, var(--accent-hover));
+    text-decoration: underline;
+  }
+}
+nav a:active, footer a:active { text-decoration: underline; }
+a, button, input, textarea, select {
+  transition: color var(--motion-fast), background-color var(--motion-fast),
+    border-color var(--motion-fast), box-shadow var(--motion-fast);
+}
+.dark, #contact {
+  --focus-ring: var(--highlight);
+  --link-hover: var(--highlight);
 }
 .slice {
   padding: 80px var(--gutter);

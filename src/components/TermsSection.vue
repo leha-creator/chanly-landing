@@ -35,37 +35,31 @@ const terms = [
   </section>
 </template>
 <style scoped lang="scss">
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-top: 40px;
-}
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 20px; padding-bottom: 48px; }
 article {
-  padding: 20px;
-  background: #ece9e1;
-  border-radius: 12px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 412px;
+  padding: 24px;
+  border-radius: 18px;
+  background: #e6e2d5;
+  top: 48px;
+  --pattern: url('../assets/images/pattern-sparks.svg');
 }
-small {
-  color: var(--accent);
-}
-h3 {
-  font-size: 24px;
-  margin-top: 20px;
-}
-@media (max-width: 55rem) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+article::before { content: ''; position: absolute; z-index: -1; top: -6%; right: -14%; width: 84%; aspect-ratio: 1; background: var(--pattern) center / contain no-repeat; pointer-events: none; }
+article:nth-child(2) { top: 18px; background: #dcd8f2; --pattern: url('../assets/images/pattern-star.svg'); }
+article:nth-child(3) { top: 38px; background: #e9e7df; --pattern: url('../assets/images/pattern-folds.svg'); }
+article:nth-child(4) { top: 0; background: var(--accent); color: white; --pattern: url('../assets/images/pattern-stripes.svg'); }
+h3 { margin: 130px 0 24px; font-size: clamp(22px, 2.1vw, 30px); }
+p { margin: auto 0 0; }
+@media (max-width: 64rem) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 48rem) {
-  .grid {
-    grid-template-columns: 1fr;
-    margin-top: 20px;
-  }
-  h3 {
-    margin-top: 10px;
-  }
+  .grid { grid-template-columns: 1fr; gap: 12px; padding: 0; }
+  .grid article { top: 0; min-height: 213px; padding: 18px 20px; }
+  article::before { width: 56%; top: -20%; }
+  h3 { margin: 28px 0 14px; font-size: 26px; }
 }
-@media (max-width:48rem){article{padding:16px} h3{font-size:22px;margin-top:6px} p{margin:6px 0 0;line-height:1.4}}
 </style>

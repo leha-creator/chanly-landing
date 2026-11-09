@@ -48,14 +48,11 @@ const attrs = useAttrs()
     font: 400 var(--field-font)/1.5 var(--font-body);
     transition: border-color var(--motion-fast) var(--ease);
     &::placeholder { color: var(--placeholder); opacity: 1; }
-    &:enabled:hover { border-color: var(--ink); }
-    &:enabled:active { border-color: var(--focus); }
-    &:focus-visible {
-      outline: 3px solid var(--focus);
-      outline-offset: 2px;
-      box-shadow: 0 0 0 2px var(--white);
+    @media (hover: hover) and (pointer: fine) {
+      &:enabled:hover { border-color: var(--accent-hover); }
     }
-    &[aria-invalid='true'] { border: 2px solid var(--error); }
+    &:focus { border-color: var(--accent); }
+    &[aria-invalid='true'] { border-color: var(--error); }
     &:disabled { opacity: .65; }
   }
 

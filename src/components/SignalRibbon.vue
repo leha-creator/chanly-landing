@@ -1,5 +1,5 @@
 <script setup>
-const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛАМА', '→', 'ДОХОД']
+const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛАМА', '→', 'ДОХОД', '→']
 </script>
 <template>
   <div id="ribbon" class="ribbon">
@@ -10,7 +10,7 @@ const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛА
         class="repeat"
         :aria-hidden="n === 2 || undefined"
       >
-        <span v-for="(word, i) in words" :key="i">{{ word }}</span>
+        <span v-for="(word, i) in words" :key="i" :class="{ arrow: word === '→' }" :aria-hidden="word === '→' || undefined">{{ word }}</span>
       </div>
     </div>
   </div>
@@ -35,13 +35,16 @@ const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛА
   font: 700 clamp(18px, 2.25vw, 32px) / 1.5 var(--font-heading);
   letter-spacing: 0.04em;
 }
+.arrow { flex: 0 0 60px; font: 700 32px/36px var(--font-heading); text-align: center; }
 @media (max-width: 48rem) {
   .repeat {
     padding: 10px 16px;
-    gap: 22px;
+    gap: 16px;
+    font-size: 16px;
   }
 }
 
+@media (max-width: 48rem) { .arrow { flex-basis: 17px; font-size: 16px; line-height: 22px; } }
 @media (prefers-reduced-motion: no-preference) {
   .track {
     animation: ticker 32s linear infinite;
