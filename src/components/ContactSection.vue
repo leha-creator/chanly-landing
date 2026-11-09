@@ -3,6 +3,57 @@ import { useSectionReveal } from '../composables/useSectionReveal.js'
 import BaseField from './BaseField.vue'
 import BaseButton from './BaseButton.vue'
 
+import { computed, nextTick, reactive, ref } from 'vue'
+
+import { useNotifications } from '../stores/notifications.js'
+
+const props = defineProps({ deliver: Function })
+const notices = useNotifications()
+const pending = ref(false)
+const emptyFields = () => ({ name: '', email: '', question: '', consent: false })
+const fields = reactive(emptyFields())
+const attempted = ref(false)
+const problems = computed(() => ({
+  name: fields.name.trim() ? '' : 'Введите ваше имя.',
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.trim()) ? '' : 'Введите адрес электронной почты.',
+  question: fields.question.trim() ? '' : 'Напишите ваш вопрос.',
+  consent: fields.consent ? '' : 'Подтвердите согласие на обработку данных.',
+}))
+const errors = computed(() => attempted.value ? problems.value : {})
+async function submit(event) {
+  if (pending.value) return
+  const form = event.currentTarget
+  attempted.value = true
+  const invalid = Object.keys(problems.value).find(key => problems.value[key])
+  if (invalid) {
+    await nextTick()
+    form.elements.namedItem(invalid)?.focus()
+    return
+  }
+  if (!props.deliver) {
+    notices.notify('info', 'Поля заполнены верно. Отправка временно недоступна.')
+    return
+  }
+  pending.value = true
+  try {
+    const result = await props.deliver({
+      name: fields.name.trim(), email: fields.email.trim(),
+      question: fields.question.trim(), consent: fields.consent,
+    })
+    if (result?.delivered !== true) {
+      notices.notify('error', 'Доставка не подтверждена. Проверьте данные и попробуйте ещё раз.')
+      return
+    }
+    notices.notify('success', 'Вопрос доставлен.')
+    attempted.value = false
+    Object.assign(fields, emptyFields())
+  } catch {
+    notices.notify('error', 'Не удалось отправить вопрос. Попробуйте ещё раз.')
+  } finally {
+    pending.value = false
+  }
+}
+
 useSectionReveal()
 </script>
 <template>
@@ -20,27 +71,31 @@ useSectionReveal()
           height="190"
         />
       </div>
-      <form data-reveal @submit.prevent>
-        <BaseField
-          label="Ваше имя"
-          autocomplete="name"
-          placeholder="Как к вам обращаться"
-        /><BaseField
-          type="email"
-          label="Электронная почта"
-          autocomplete="email"
-          placeholder="you@example.ru"
-        /><label
-          >Вопрос<textarea
-            placeholder="Расскажите, чем помочь"
-            rows="4"
-          ></textarea></label
-        ><label class="consent"
-          ><input type="checkbox" /> Согласен на обработку персональных данных и
-          ознакомлен с политикой конфиденциальности</label
-        ><BaseButton class="lime" disabled type="submit"
-          >Отправить вопрос</BaseButton
-        >
+      <form data-reveal novalidate @submit.prevent="submit">
+        <BaseField :disabled="pending" v-model="fields.name" name="name" required label="Ваше имя" autocomplete="name"
+          placeholder="Как к вам обращаться" :error="errors.name" />
+        <BaseField :disabled="pending" v-model="fields.email" name="email" required type="email" label="Электронная почта"
+          autocomplete="email" placeholder="you@example.ru" :error="errors.email" />
+        <div>
+          <label for="contact-question">Вопрос</label>
+          <textarea id="contact-question" :disabled="pending" v-model="fields.question" required name="question" rows="4"
+            placeholder="Расскажите, чем помочь" :aria-invalid="errors.question ? 'true' : undefined"
+            :aria-describedby="errors.question ? 'contact-question-error' : undefined"></textarea>
+          <span v-if="errors.question" id="contact-question-error" class="error">{{ errors.question }}</span>
+        </div>
+        <div>
+          <label class="consent">
+            <input :disabled="pending" v-model="fields.consent" required name="consent" type="checkbox"
+              :aria-invalid="errors.consent ? 'true' : undefined"
+              :aria-describedby="errors.consent ? 'contact-consent-error' : undefined" />
+            Согласен на обработку персональных данных и ознакомлен с политикой конфиденциальности
+          </label>
+          <span v-if="errors.consent" id="contact-consent-error" class="error">{{ errors.consent }}</span>
+        </div>
+        <small v-if="!deliver">Отправка временно недоступна. Вы можете проверить заполнение формы.</small>
+        <BaseButton class="lime" type="submit" :loading="pending">
+          {{ pending ? "Отправляем…" : deliver ? "Отправить вопрос" : "Проверить поля" }}
+        </BaseButton>
       </form>
     </div>
   </section>
@@ -82,6 +137,9 @@ textarea {
   font-size: 1rem;
   resize: vertical;
 }
+.error { display: table; margin-top: 4px; background: var(--white); color: var(--error); padding-inline: 4px; font-size: 13px; }
+textarea[aria-invalid="true"] { outline: 2px solid var(--error); }
+textarea { color: var(--ink); }
 .consent {
   display: flex;
   align-items: start;
