@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.package.outputs.digest }}
+      artifact: ${{ steps.upload.outputs.artifact-id }}
     steps:
       - name: Получить исходный код
         uses: actions/checkout@v4
@@ -32,6 +33,8 @@ jobs:
         run: npm run lint
       - name: Проверить компоненты
         run: npm test
+      - name: Проверить выпуск и откат в изолированном каталоге
+        run: python3 -m unittest discover -s deploy/tests
       - name: Собрать сайт
         run: npm run build
         env:
@@ -50,8 +53,42 @@ jobs:
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           echo "revision=$GITHUB_SHA run=$GITHUB_RUN_ID sha256=$digest"
       - uses: actions/upload-artifact@v4
+        id: upload
         with:
           name: landing-${{ github.run_id }}-${{ github.run_attempt }}
           path: landing.tar.gz
           retention-days: 14
           if-no-files-found: error
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    concurrency:
+      group: landing-dev-release
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: https://dev.chanly.ru
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.check.outputs.artifact }}
+          merge-multiple: true
+      - name: Сверить пакет и отправить операцию выпуска
+        env:
+          DIGEST: ${{ needs.check.outputs.digest }}
+          OPERATION: ${{ inputs.operation }}
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          printf '%s  landing.tar.gz\n' "$DIGEST" | sha256sum --check --strict
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq .object.sha)" = "$GITHUB_SHA"
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/landing
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -T -i ~/.ssh/landing -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o BatchMode=yes \
+            deploy@194.58.120.196 "$OPERATION $GITHUB_RUN_ID $GITHUB_SHA $DIGEST" < landing.tar.gz
