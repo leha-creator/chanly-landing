@@ -102,6 +102,7 @@ useSectionReveal()
 </template>
 <style scoped lang="scss">
 #contact {
+  --field-label: var(--on-accent);
   background: var(--accent);
   color: white;
 }
@@ -109,20 +110,27 @@ h2 {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(48px, 7vw, 90px);
+  font-size: clamp(48px, 6.25vw, 90px);
+  letter-spacing: -.04em;
 }
 p {
-  font-size: clamp(18px, 2vw, 24px);
+  margin: 28px 0;
+  color: var(--on-accent);
+  font-size: clamp(17px, 1.46vw, 21px);
 }
 img {
   max-width: 100%;
   height: auto;
 }
+@media (min-width: 48.001rem) {
+  .split { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6.1%; }
+}
 form {
   display: grid;
-  gap: 16px;
+  gap: 20px;
 }
 label {
+  color: var(--field-label);
   font-size: 13px;
 }
 textarea {
@@ -130,21 +138,60 @@ textarea {
   width: 100%;
   margin-top: 8px;
   padding: 14px;
-  border: 1px solid transparent;
+  border: 1px solid var(--rule);
   border-radius: var(--field-radius);
   background: var(--field-bg);
   font: inherit;
   font-size: 1rem;
+  height: 110px;
+  min-height: 110px;
   resize: vertical;
+  &::placeholder { color: var(--placeholder); opacity: 1; }
 }
 .error { display: table; margin-top: 4px; background: var(--white); color: var(--error); padding-inline: 4px; font-size: 13px; }
-textarea:focus { border-color: var(--accent); }
+textarea:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+textarea[aria-invalid="true"]:focus { box-shadow: inset 0 0 0 1px var(--error); }
 textarea[aria-invalid="true"] { border-color: var(--error); }
 textarea { color: var(--ink); }
 .consent {
   display: flex;
   align-items: start;
   gap: 8px;
+}
+.consent { cursor: pointer; min-height: 24px; font-size: 12px; gap: 12px; }
+.consent input {
+  appearance: none;
+  display: grid;
+  place-content: center;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  cursor: inherit;
+}
+.consent input:checked { background: var(--highlight); border-color: var(--highlight); }
+.consent input:checked::after {
+  content: '';
+  width: 6px;
+  height: 11px;
+  margin-top: -3px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+@media (hover: hover) and (pointer: fine) {
+  .consent:hover input:enabled { border-color: var(--ink); }
+}
+.consent input[aria-invalid=true] { border: 2px solid var(--error); }
+.consent input:disabled { opacity: .6; cursor: default; }
+.consent input:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--focus); }
+@media (forced-colors: active) {
+  .consent input { appearance: auto; }
+  .consent input:checked::after { content: none; }
 }
 form .button {
   width: 100%;
@@ -154,5 +201,14 @@ form .button {
     display: none;
   }
 }
-@media (max-width:48rem){.split{gap:16px} form{gap:8px} .consent{line-height:1.38} h2{font-size:46px} p{font-size:17px;line-height:1.4;margin:12px 0 0} p br{display:none} textarea{height:92px} form :deep(.field){gap:4px}}
+@media (max-width: 48rem) {
+  .split { gap: 20px; }
+  form { gap: 8px; }
+  h2 { font-size: 46px; line-height: 1.09; }
+  p { font-size: 17px; line-height: 1.4; margin: 20px 0 0; }
+  p br { display: none; }
+  textarea { min-height: 92px; height: 92px; font-size: 15px; }
+  .consent { font-size: 13px; line-height: 1.4; gap: 8px; }
+  .button { --button-font: 15px; }
+}
 </style>

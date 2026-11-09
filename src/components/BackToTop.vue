@@ -9,14 +9,14 @@ defineProps({ visible: Boolean })
   pointer-events: auto;
   display: grid;
   place-items: center;
-  background: var(--ink);
+  background: #1f211a;
   border: 1px solid var(--paper);
   color: white;
   width: 48px;
   height: 48px;
   border-radius: 50%;
   text-decoration: none;
-  font-size: 24px;
+  font: 500 24px/1.5 var(--font-body);
 }
 @media (hover: hover) and (pointer: fine) {
   .back:hover { background: var(--accent-hover); }

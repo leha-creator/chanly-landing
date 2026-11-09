@@ -4,4 +4,5 @@ import { createPinia } from 'pinia'
 import router from './router/index.js'
 import './assets/styles/main.scss'
 
-createApp(App).use(createPinia()).use(router).mount('#app')
+const app = createApp(App).use(createPinia()).use(router)
+router.isReady().then(() => app.mount('#app'))

@@ -124,7 +124,7 @@ onUnmounted(() => {
 h2 {
   font-size: clamp(34px, 3.62vw, 52px);
   letter-spacing: -.03em;
-  color: var(--white);
+  color: var(--paper);
 }
 .demo {
   display: grid;

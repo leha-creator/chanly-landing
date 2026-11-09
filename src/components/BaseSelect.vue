@@ -84,16 +84,21 @@ onUnmounted(() => globalThis.document.removeEventListener('pointerdown', outside
 .select-field { display: grid; gap: 8px; min-width: 0; font-size: 13px; }
 .control { position: relative; }
 .control::after {
-  content: ''; position: absolute; top: calc(var(--field-height) / 2 - 5px); right: 18px;
-  width: 9px; height: 9px; border: solid var(--ink); border-width: 0 2px 2px 0;
-  transform: rotate(45deg); pointer-events: none;
+  content: ''; position: absolute; top: 50%; right: 18px;
+  width: 20px; height: 20px; transform: translateY(-50%); pointer-events: none;
+  background: url('../assets/images/select-chevron.svg') center / contain no-repeat;
 }
 select, button {
   width: 100%; min-height: var(--field-height); appearance: none; text-align: left;
-  padding: 8px 42px 8px var(--field-inset); border: 1px solid var(--rule); border-radius: 8px;
+  padding: 8px 42px 8px var(--field-inset); border: 1px solid var(--rule); border-radius: var(--field-radius);
   font: 400 var(--field-font)/1.4 var(--font-body); background: white; color: var(--ink); cursor: pointer;
 }
 select { display: none; }
+select:focus, button:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
 ul {
   position: absolute; z-index: 2; inset: calc(100% + 4px) 0 auto;
   margin: 0; padding: 4px; max-height: min(280px, 40vh); overflow: auto; overscroll-behavior: contain;

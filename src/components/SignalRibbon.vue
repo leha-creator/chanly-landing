@@ -1,5 +1,5 @@
 <script setup>
-const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛАМА', '→', 'ДОХОД', '→']
+const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХОД']
 </script>
 <template>
   <div id="ribbon" class="ribbon">
@@ -10,7 +10,10 @@ const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛА
         class="repeat"
         :aria-hidden="n === 2 || undefined"
       >
-        <span v-for="(word, i) in words" :key="i" :class="{ arrow: word === '→' }" :aria-hidden="word === '→' || undefined">{{ word }}</span>
+        <template v-for="(word, index) in words" :key="word">
+          <span>{{ word }}</span>
+          <span v-if="index < words.length - 1" class="arrow" aria-hidden="true"></span>
+        </template>
       </div>
     </div>
   </div>
@@ -26,25 +29,27 @@ const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛА
   width: max-content;
 }
 .repeat {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(max-content, 1fr) 60px) minmax(max-content, 1fr);
   align-items: center;
-  justify-content: space-around;
   min-width: 100vw;
-  gap: 2rem;
-  padding: 18px 2rem;
-  font: 700 clamp(18px, 2.25vw, 32px) / 1.5 var(--font-heading);
-  letter-spacing: 0.04em;
+  gap: 2.5vw;
+  padding: 24px 5.55vw 24px 24px;
+  font: 700 clamp(18px, 1.95vw, 28px) / 1.12 var(--font-heading);
+  letter-spacing: -0.03em;
 }
-.arrow { flex: 0 0 60px; font: 700 32px/36px var(--font-heading); text-align: center; }
+.arrow { flex: 0 0 60px; height: 36px; background: url('../assets/images/ribbon-arrow.svg') center / contain no-repeat; }
 @media (max-width: 48rem) {
   .repeat {
-    padding: 10px 16px;
+    display: flex;
+    padding: 12px;
+    line-height: 1.4;
     gap: 16px;
     font-size: 16px;
   }
 }
 
-@media (max-width: 48rem) { .arrow { flex-basis: 17px; font-size: 16px; line-height: 22px; } }
+@media (max-width: 48rem) { .arrow { flex-basis: 17px; height: 22px; background-image: url('../assets/images/ribbon-arrow-small.svg'); } }
 @media (prefers-reduced-motion: no-preference) {
   .track {
     animation: ticker 32s linear infinite;
@@ -59,16 +64,12 @@ const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛА
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .repeat {
-    min-width: 100vw;
-    max-width: 100vw;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5em;
-  }
-  .repeat .arrow:last-child,
   .repeat[aria-hidden] {
     display: none;
+  }
+  @media (max-width: 48rem) {
+    .repeat { width: 100vw; gap: clamp(2px, 1vw, 8px); justify-content: space-between; font-size: clamp(12px, 3.65vw, 16px); }
+    .arrow { flex-basis: 1em; }
   }
 }
 </style>

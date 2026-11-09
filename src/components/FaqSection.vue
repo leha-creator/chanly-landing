@@ -36,9 +36,10 @@ const questions = [
 @media (min-width: 48.001rem) {
   .split { grid-template-columns: 0.64fr 1fr; }
 }
-h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; }
-article { padding: 8px 0; margin-bottom: 10px; border-bottom: 1px solid var(--rule); }
-h3 { font-size: clamp(17px, 1.6vw, 24px); }
+h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(40px, 3.89vw, 56px); letter-spacing: -.04em; }
+article { padding: 0 0 2px; margin-bottom: 24px; border-bottom: 1px solid var(--rule); }
+article:last-child { margin-bottom: 0; }
+h3 { font: 500 20px/1.5 var(--font-body); letter-spacing: normal; }
 button {
   display: flex;
   justify-content: space-between;
@@ -58,7 +59,20 @@ button {
   button:hover { color: var(--accent-hover); }
 }
 button:active { color: var(--accent-pressed); }
-button span { color: var(--accent); }
+button span {
+  flex: 0 0 24px; height: 24px; font-size: 0;
+  background: url('../assets/images/faq-plus.svg') center / contain no-repeat;
+}
+button[aria-expanded=true] span { background-image: url('../assets/images/faq-close.svg'); }
+.answer p { color: #606458; margin: 2px 0 14px; }
+@media (max-width: 48rem) {
+  h2 { font-size: 40px; line-height: 1.09; }
+  h3 { font-size: 17px; line-height: 1.4; }
+  .split { gap: 20px; }
+  article { padding: 8px 0 10px; margin-bottom: 0; }
+  .answer p { margin: 0 0 12px; font-size: 15px; line-height: 1.4; }
+  button span, button[aria-expanded=true] span { background: none; font: 500 21px/24px var(--font-body); }
+}
 .answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--motion-fast) var(--ease); }
 .answer.open { grid-template-rows: 1fr; }
 .answer > div { overflow: hidden; min-height: 0; }

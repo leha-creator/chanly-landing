@@ -44,6 +44,7 @@ img {
   height: auto;
 }
 nav {
+  font-size: 14px;
   display: flex;
   gap: 32px;
   flex: 1;
@@ -52,13 +53,20 @@ nav {
 a {
   text-decoration: none;
 }
+@media (min-width: 64rem) {
+  nav { gap: 40px; }
+  nav a:nth-child(1) { width: 150px; }
+  nav a:nth-child(2) { width: 65px; }
+  nav a:nth-child(3) { width: 90px; }
+}
 @media (max-width: 48rem) {
   .header { position: static; }
   .header-row {
-    padding: 12px 0 4px;
+    padding: 20px 0 0;
+    border: 0;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 4px;
+    gap: 20px 4px;
   }
   img {
     width: 116px;

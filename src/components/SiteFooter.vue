@@ -11,7 +11,7 @@ useSectionReveal()
       <div class="invitation">
         <h2 data-reveal>Дайте каналу<br />новую возможность.</h2>
         <BaseButton data-reveal class="lime" @click="connectChannel"
-          >Подключить канал</BaseButton
+          >Подключить канал<span class="cta-arrow" aria-hidden="true">↗</span></BaseButton
         >
       </div>
       <div data-reveal class="links">
@@ -32,10 +32,12 @@ useSectionReveal()
 }
 .links {
   border-top: 1px solid #66685f;
-  padding-top: 32px;
+  padding-top: 40px;
   margin-top: 40px;
-  font-size: 14px;
+  font-size: 13px;
 }
+h2 { font-size: clamp(32px, 4.31vw, 62px); }
+.links a { text-decoration: none; }
 footer {
   padding-bottom: 40px;
 }
@@ -50,5 +52,11 @@ footer {
   }
 }
 .invitation .button { width: min(320px, 100%); }
-@media (max-width:48rem){h2{font-size:32px;line-height:1.09}.invitation .button{width:100%}.links{margin-top:20px;padding-top:0;border:0}}
+@media (max-width: 48rem) {
+  h2 { font-size: 32px; line-height: 1.09; }
+  .invitation, .links { gap: 20px; }
+  .invitation .button { width: 100%; --button-font: 15px; --button-height: 45px; }
+  .cta-arrow { display: none; }
+  .links { font-size: 14px; line-height: 1.4; margin-top: 20px; padding-top: 0; border: 0; }
+}
 </style>

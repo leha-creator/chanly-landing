@@ -20,18 +20,24 @@ const fill = computed(() => (value.value - props.min) / (props.max - props.min) 
 </template>
 <style scoped lang="scss">
 .range-field { display: grid; gap: 8px; font-size: 13px; }
-.range-field > span { background: white; padding: 14px; border-radius: 8px; font-size: 16px; }
+.range-field > span { background: white; border: 1px solid var(--rule); padding: 0 16px; min-height: var(--field-height); display: flex; align-items: center; border-radius: var(--field-radius); font-size: 16px; font-weight: 400; color: #182230; }
 input {
-  appearance: none; width: 100%; height: 32px; margin: 0; cursor: grab; border-radius: 6px;
-  background: linear-gradient(to right, var(--accent) var(--fill), #d3d3df var(--fill)) center / 100% 6px no-repeat;
+  appearance: none; display: block; width: 100%; height: 32px; margin: 0; padding: 0; border: 0; background: transparent; cursor: grab;
+}
+@mixin track {
+  height: 6px; border-radius: 3px;
+  background: linear-gradient(to right, var(--accent) var(--fill), #d3d3df var(--fill));
 }
 @mixin thumb {
   appearance: none; width: 22px; height: 22px; border-radius: 50%;
-  border: 3px solid white; background: var(--thumb, var(--accent)); box-shadow: 0 0 0 1px var(--thumb, var(--accent));
+  border: 3px solid var(--thumb-border, white); background: var(--thumb, var(--accent)); box-shadow: 0 0 0 1px var(--thumb, var(--accent));
 }
-input::-webkit-slider-thumb { @include thumb; }
+input::-webkit-slider-runnable-track { @include track; }
+input::-moz-range-track { @include track; }
+input::-webkit-slider-thumb { @include thumb; margin-top: -8px; }
 input::-moz-range-thumb { @include thumb; }
 @media (hover: hover) and (pointer: fine) { input:hover { --thumb: var(--accent-hover); } }
 input:active { cursor: grabbing; --thumb: var(--accent-pressed); }
-small { display: flex; justify-content: space-between; }
+input:focus-visible { outline: none; --thumb-border: var(--focus); --thumb: white; }
+small { font-size: 12px; font-weight: 400; display: flex; justify-content: space-between; }
 </style>

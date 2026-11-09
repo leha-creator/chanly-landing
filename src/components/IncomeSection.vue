@@ -59,18 +59,27 @@ useSectionReveal()
 </template>
 <style scoped lang="scss">
 #income {
+  padding-block: 64px;
   background: var(--paper);
-  color: var(--ink);
+  color: #182230;
+  --field-label: #5d687a;
+  --field-height: 58px;
+  --field-radius: 12px;
+}
+.wrap > p {
+  margin: 40px 0;
+  font-size: 18px;
+  color: var(--field-label);
 }
 .calculator {
-  margin-top: 36px;
+  margin-top: 0;
   background: #f7f7fc;
   color: var(--ink);
   padding: 40px;
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 40px;
-  border-radius: 24px;
+  grid-template-columns: minmax(0, 660fr) minmax(0, 524fr);
+  gap: clamp(24px, 3.34vw, 48px);
+  border-radius: 28px;
 }
 .inputs,
 .result,
@@ -79,43 +88,48 @@ label {
   gap: 10px;
 }
 .inputs {
-  gap: 16px;
+  gap: 24px;
+  color: #182230;
+  > small { font-size: 12px; color: var(--field-label); }
+  :deep(label) { color: var(--field-label); font-weight: 500; }
 }
 h3 {
-  font-size: 28px;
+  font-size: 32px;
 }
 .result {
   align-self: start;
-  border-radius: 16px;
+  border-radius: 24px;
   padding: 32px;
   position: relative;
   isolation: isolate;
   overflow: hidden;
   background: var(--ink);
   &::before {
-    content: ''; position: absolute; z-index: -1; top: 0; right: 3px;
-    width: min(23%, 120px); aspect-ratio: 120 / 106; opacity: .25;
-    background: url('../assets/images/pattern-stripes.svg') center / cover; pointer-events: none;
+    content: ''; position: absolute; z-index: -1; inset: 0;
+    background: url('../assets/images/income-mark-stripes.svg') right top / var(--mark-width, 23%) auto no-repeat;
+    pointer-events: none;
   }
   --focus-ring: var(--highlight);
   color: white;
-  align-content: center;
+  align-content: start;
+  gap: 20px;
 }
 .result strong {
   display: block;
   max-width: 82%;
-  font-size: clamp(44px, 4vw, 60px);
-  line-height: 1;
+  font: 700 clamp(44px, 4.17vw, 60px)/1.12 var(--font-heading);
+  letter-spacing: -.03em;
 }
 .result button {
-  margin-top: 24px;
+  margin-top: 0;
   width: 100%;
-  border-radius: 6px;
-
+  border-radius: 12px;
 }
+.result small { color: #c5c6d5; font-size: 13px; }
 .result p {
-  margin: 16px 0 0;
-  padding-bottom: 16px;
+  color: #c5c6d5;
+  margin: 20px 0 0;
+  padding-bottom: 20px;
   border-bottom: 1px solid #626279;
 }
 @media (min-width: 48.001rem) {
@@ -128,8 +142,13 @@ h3 {
     gap: 20px;
     margin-top: 20px;
   }
+  #income { padding-block: 40px; --field-height: 49px; --field-radius: 8px; }
+  h2 { line-height: 1.09; }
+  .wrap > p { margin: 20px 0; font-size: 16px; line-height: 1.4; }
   .result {
-    padding: 20px;
+    border-radius: 12px;
+    padding: 16px;
+    --mark-width: 20%;
   }
 }
 .placements-mobile { display: none; }
@@ -137,11 +156,14 @@ h3 {
 @media (max-width: 48rem) {
   .placements-desktop { display: none; }
   .placements-mobile { display: grid; }
-  .inputs { gap: 8px; }
-  .inputs h3 { font-size: 23px; }
-  .result { gap: 6px; }
+  .inputs { gap: 10px; }
+  .inputs > small { font-size: 13px; }
+  .inputs h3 { font-size: 23px; line-height: 1.4; }
+  .result { gap: 8px; }
+  .result small { font-size: 14px; line-height: 1.4; }
+  .result p { font-size: 15px; line-height: 1.4; margin-top: 8px; padding: 0; border: 0; }
   .result strong { font-size: 44px; }
-  .result button { margin-top: 6px; }
+  .result button { border-radius: 28px; --button-font: 15px; --button-height: 45px; }
   .calculator { gap: 12px; }
 }
 </style>

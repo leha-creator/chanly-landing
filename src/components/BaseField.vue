@@ -40,7 +40,7 @@ const attrs = useAttrs()
     width: 100%;
     min-width: 0;
     height: var(--field-height);
-    border: 1px solid transparent;
+    border: 1px solid var(--rule);
     border-radius: var(--field-radius);
     padding: 0 calc(var(--field-inset) - 1px);
     background: var(--field-bg);
@@ -51,8 +51,9 @@ const attrs = useAttrs()
     @media (hover: hover) and (pointer: fine) {
       &:enabled:hover { border-color: var(--accent-hover); }
     }
-    &:focus { border-color: var(--accent); }
+    &:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
     &[aria-invalid='true'] { border-color: var(--error); }
+    &[aria-invalid='true']:focus { box-shadow: inset 0 0 0 1px var(--error); }
     &:disabled { opacity: .65; }
   }
 

@@ -17,7 +17,7 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
         <h1>Канал ваш.<br />Доход <em>тоже.</em></h1>
         <p>
           Вы собираете вокруг себя людей.<br />Мы помогаем превратить это в
-          заработок на рекламных размещениях.
+          заработок<br class="desktop-break" /> на рекламных размещениях.
         </p>
         <div class="actions">
           <BaseButton @click="connectChannel">Подключить мой канал</BaseButton
@@ -66,9 +66,10 @@ em {
   color: var(--accent);
 }
 p {
-  font-size: clamp(17px, 1.55vw, 22px);
-  max-width: 550px;
-  margin: 24px 0 32px;
+  font-size: clamp(17px, 1.4vw, 20px);
+  max-width: 590px;
+  color: #606458;
+  margin: 28px 0;
 }
 .actions {
   display: flex;
@@ -77,11 +78,13 @@ p {
   flex-wrap: wrap;
 }
 .actions button {
-  background: var(--accent);
+  --button-width: 280px;
 }
 .actions a {
-  font-size: 15px;
+  font-size: 14px;
+  text-decoration: none;
 }
+@media (hover: hover) and (pointer: fine) { .actions a:hover { text-decoration: underline; color: var(--accent-hover); } }
 .sculpture {
   aspect-ratio: 604/580;
   background: #ece9e1;
@@ -100,8 +103,8 @@ p {
   width: 100%;
 }
 .emblem {
-  width: 53%;
-  left: 23.2%;
+  width: 61.26%;
+  left: 14.39%;
   top: 18.6%;
 }
 .identity {
@@ -115,13 +118,13 @@ p {
   top: 70.7%;
 }
 .sticker {
-  width: 25.5%;
-  left: 68.2%;
+  width: 26.99%;
+  left: 66.62%;
   top: 5.9%;
 }
 @media (max-width: 48rem) {
   .hero {
-    padding: 24px var(--gutter) 20px;
+    padding: 20px var(--gutter);
   }
   .wrap {
     grid-template-columns: 1fr;
@@ -133,12 +136,16 @@ p {
   }
   p {
     margin: 20px 0;
+    line-height: 1.4;
   }
   .actions {
     display: grid;
-    gap: 16px;
+    gap: 20px;
   }
+  .desktop-break { display: none; }
   .actions button {
+    --button-font: 15px;
+    --button-height: 45px;
     width: 100%;
   }
   .sculpture {

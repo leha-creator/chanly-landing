@@ -21,14 +21,9 @@ it('закрывается и при запрете браузерного хр�
   page.unmount()
 })
 
-it('отказ на экране пояснений действует до следующего посещения', async () => {
+it('отказ от сохранения выбора действует до следующего посещения', async () => {
   const page = mount(CookieNotice, { attachTo: globalThis.document.body })
-  const details = page.findAll('button')[2]
-  await details.trigger('click')
-  expect(page.get('h2').text()).toBe('Что сохраняется')
-  expect(globalThis.document.activeElement).toBe(details.element)
-  await details.trigger('click')
-  expect(details.text()).toBe('Подробнее')
+  expect(page.findAll('button').map(button => button.text())).toEqual(['Принять', 'Отклонить'])
   await page.findAll('button')[1].trigger('click')
   expect(page.find('aside').exists()).toBe(false)
   expect(globalThis.localStorage.length).toBe(0)

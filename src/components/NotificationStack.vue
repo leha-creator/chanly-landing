@@ -38,7 +38,7 @@ const notifications = useNotifications()
 span { min-width: 0; overflow-wrap: anywhere; }
 button {
   flex: 0 0 44px; height: 44px; padding: 0; border: 0; border-radius: 8px;
-  color: inherit; background: transparent; font-size: 22px; cursor: pointer;
+  color: inherit; background: transparent; font: 400 19px/1.4 var(--font-body); cursor: pointer;
 }
 button:focus-visible { outline-color: var(--highlight); outline-offset: -3px; }
 @media (hover: hover) and (pointer: fine) { button:hover { background: #41443b; } }

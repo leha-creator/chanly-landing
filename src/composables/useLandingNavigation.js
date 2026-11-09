@@ -30,12 +30,14 @@ export function useLandingNavigation() {
       !!ribbon &&
       ribbon.getBoundingClientRect().top <= headerInset() + 1
   }
-  function jump(hash, immediate = false) {
+  function jump(hash, { immediate = false, focus = true } = {}) {
     const target = doc.getElementById((hash || '#top').slice(1))
     if (!target) return
-    const heading = target.querySelector('h1,h2') || target
-    heading.setAttribute('tabindex', '-1')
-    heading.focus({ preventScroll: true })
+    if (focus) {
+      const heading = target.querySelector('h1,h2') || target
+      heading.setAttribute('tabindex', '-1')
+      heading.focus({ preventScroll: true })
+    }
     const top =
       target.id === 'top'
         ? 0
@@ -82,7 +84,7 @@ export function useLandingNavigation() {
     reduced.value = preference.matches
   }
   watch(
-    () => route.fullPath,
+    () => route.hash,
     async () => {
       await nextTick()
       if (active) {
@@ -115,7 +117,7 @@ export function useLandingNavigation() {
       await new Promise((resolve) => globalThis.requestAnimationFrame(resolve))
       if (active && route.hash === initialHash) {
         provider.value?.lenis?.resize?.()
-        jump(initialHash, true)
+        jump(initialHash, { immediate: true, focus: initialHash !== '#top' })
       }
     }
   })
