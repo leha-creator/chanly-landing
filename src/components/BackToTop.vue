@@ -6,10 +6,7 @@ defineProps({ visible: Boolean })
 </template>
 <style scoped lang="scss">
 .back {
-  position: fixed;
-  z-index: var(--layer-sticky);
-  left: var(--gutter);
-  bottom: 20px;
+  pointer-events: auto;
   display: grid;
   place-items: center;
   background: var(--ink);

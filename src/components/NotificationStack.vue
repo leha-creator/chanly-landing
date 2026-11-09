@@ -12,20 +12,39 @@ const notifications = useNotifications()
   </div>
 </template>
 <style scoped lang="scss">
-.notifications { display: grid; justify-items: end; gap: var(--gap); overflow-y: auto; }
+.notifications {
+  display: flex;
+  flex-direction: column-reverse;
+  width: min(320px, 100%);
+  max-height: 48dvh;
+  gap: 5px;
+  overflow: auto;
+}
 .notice {
   pointer-events: auto;
+  flex: none;
   display: flex;
   align-items: center;
-  gap: 12px;
-  width: min(100%, 320px);
-  padding: 4px 4px 4px 16px;
-  background: var(--ink);
-  color: var(--white);
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 18px;
+  min-height: 52px;
+  border: 1px solid #595b52;
   border-radius: 12px;
+  background: #1c1f1a;
+  color: white;
 }
-.success { background: var(--highlight); color: var(--ink); }
-.error { background: var(--error); }
-span { flex: 1; overflow-wrap: anywhere; }
-button { flex: none; }
+.error { min-height: 80px; }
+span { min-width: 0; overflow-wrap: anywhere; }
+button {
+  flex: 0 0 44px; height: 44px; padding: 0; border: 0; border-radius: 8px;
+  color: inherit; background: transparent; font-size: 22px; cursor: pointer;
+}
+button:focus-visible { outline-color: var(--highlight); outline-offset: -3px; }
+@media (hover: hover) and (pointer: fine) { button:hover { background: #41443b; } }
+button:active { background: #4d5046; }
+@media (max-width: 48rem) {
+  .notifications { width: min(304px, 100%); gap: 9px; }
+  .notice { min-height: 49px; padding: 1px 4px 1px 12px; gap: 4px; font-size: 14px; }
+}
 </style>

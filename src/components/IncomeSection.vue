@@ -1,5 +1,7 @@
 <script setup>
 import { useSectionReveal } from '../composables/useSectionReveal.js'
+import BaseSelect from './BaseSelect.vue'
+import BaseRange from './BaseRange.vue'
 import BaseButton from './BaseButton.vue'
 import { connectChannel } from '../composables/useConnectChannel.js'
 
@@ -16,6 +18,8 @@ function placementCount(count) {
   if (count === 1) return '1 размещение'
   return count + (count < 5 ? ' размещения' : ' размещений')
 }
+const topicOptions = incomeTopics.map(item => ({ value: item, label: item.label }))
+const placementOptions = Array.from({ length: 12 }, (_, index) => ({ value: index + 1, label: placementCount(index + 1) }))
 const period = computed(() => placements.value === 1
   ? 'за месяц при одном размещении'
   : 'за месяц при ' + placements.value + ' размещениях')
@@ -30,23 +34,12 @@ useSectionReveal()
       <div class="calculator">
         <div data-reveal class="inputs">
           <h3>Ваш сценарий дохода</h3>
-          <label>Тематика канала
-            <select v-model="topic">
-              <option v-for="item in incomeTopics" :key="item.id" :value="item">{{ item.label }}</option>
-            </select>
-          </label>
+          <BaseSelect v-model="topic" label="Тематика канала" :options="topicOptions" />
           <BaseField v-model="views" label="Средние просмотры поста" inputmode="numeric"
             :error="estimate === null ? 'Введите целое число просмотров от нуля в допустимом диапазоне.' : ''" />
-          <label class="placements-desktop">Размещений в месяц
-            <strong>{{ placementCount(placements) }}</strong>
-            <input v-model.number="placements" type="range" min="1" max="12" />
-          </label>
-          <label class="placements-mobile">Размещений в месяц
-            <select v-model.number="placements">
-              <option v-for="count in 12" :key="count" :value="count">{{ placementCount(count) }}</option>
-            </select>
-          </label>
-          <div class="limits"><span>1</span><span>12</span></div>
+          <BaseRange v-model="placements" class="placements-desktop" label="Размещений в месяц"
+            :text="placementCount(placements)" :min="1" :max="12" />
+          <BaseSelect v-model="placements" class="placements-mobile" label="Размещений в месяц" :options="placementOptions" />
           <small>Оценка до налогов. Число заказов может меняться.</small>
         </div>
         <div data-reveal class="result">
@@ -91,34 +84,18 @@ label {
 h3 {
   font-size: 28px;
 }
-input,
-select {
-  font: inherit;
-  padding: 10px;
-  width: 100%;
-  min-width: 0;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  background: white;
-  color: var(--ink);
-}
-input[type='range'] {
-  padding: 0;
-  accent-color: var(--accent);
-}
-.limits {
-  display: flex;
-  justify-content: space-between;
-}
 .result {
   align-self: start;
   border-radius: 16px;
   padding: 32px;
-  background: #15162c;
+  background: var(--ink) url('../assets/images/pattern-stripes.svg') right 3px top / min(23%, 120px) auto no-repeat;
+  --focus-ring: var(--highlight);
   color: white;
   align-content: center;
 }
 .result strong {
+  display: block;
+  max-width: 82%;
   font-size: clamp(44px, 4vw, 60px);
   line-height: 1;
 }
@@ -126,8 +103,7 @@ input[type='range'] {
   margin-top: 24px;
   width: 100%;
   border-radius: 6px;
-  background: var(--accent);
-  color: white;
+
 }
 .result p {
   margin: 16px 0 0;
@@ -136,7 +112,6 @@ input[type='range'] {
 }
 @media (min-width: 48.001rem) {
   .inputs :deep(.field) { max-width: 320px; --field-bg: white; }
-  .placements-desktop strong { padding: 14px; border-radius: 8px; background: white; font-weight: 400; }
 }
 @media (max-width: 48rem) {
   .calculator {
@@ -151,5 +126,14 @@ input[type='range'] {
 }
 .placements-mobile { display: none; }
 .result { min-width: 0; overflow-wrap: anywhere; }
-@media (max-width:48rem){.placements-desktop {display:none}.placements-mobile {display:grid}.inputs{gap:8px}.inputs h3{font-size:23px}.inputs label{font-size:13px;gap:5px}.inputs label strong{padding:13px;background:white;border-radius:6px;font-size:15px;font-weight:400}.inputs input[type='range'],.limits{display:none}.result{gap:6px}.result strong{font-size:44px}.result button{margin-top:6px}.calculator{gap:12px}.inputs input,.inputs select{font-size:15px;min-height:49px}}
+@media (max-width: 48rem) {
+  .placements-desktop { display: none; }
+  .placements-mobile { display: grid; }
+  .inputs { gap: 8px; }
+  .inputs h3 { font-size: 23px; }
+  .result { gap: 6px; }
+  .result strong { font-size: 44px; }
+  .result button { margin-top: 6px; }
+  .calculator { gap: 12px; }
+}
 </style>
