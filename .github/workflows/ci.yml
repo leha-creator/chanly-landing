@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   check:
+    if: github.event_name == 'pull_request' || inputs.operation == 'release'
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.package.outputs.digest }}
@@ -61,7 +62,11 @@ jobs:
           if-no-files-found: error
 
   deploy:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master'
+    if: >-
+      always() && !cancelled() && github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/master' &&
+      ((inputs.operation == 'release' && needs.check.result == 'success') ||
+       (inputs.operation == 'rollback' && needs.check.result == 'skipped'))
     needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -73,6 +78,7 @@ jobs:
       url: https://dev.chanly.ru
     steps:
       - uses: actions/download-artifact@v4
+        if: inputs.operation == 'release'
         with:
           artifact-ids: ${{ needs.check.outputs.artifact }}
           merge-multiple: true
@@ -84,11 +90,17 @@ jobs:
           KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          printf '%s  landing.tar.gz\n' "$DIGEST" | sha256sum --check --strict
+          if [ "$OPERATION" = release ]; then
+            printf '%s  landing.tar.gz\n' "$DIGEST" | sha256sum --check --strict
+            input=landing.tar.gz
+          else
+            input=/dev/null
+            DIGEST=$(sha256sum /dev/null | cut -d' ' -f1)
+          fi
           test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq .object.sha)" = "$GITHUB_SHA"
           umask 077
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/landing
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
           ssh -T -i ~/.ssh/landing -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o BatchMode=yes \
-            deploy@194.58.120.196 "$OPERATION $GITHUB_RUN_ID $GITHUB_SHA $DIGEST" < landing.tar.gz
+            deploy@194.58.120.196 "$OPERATION $GITHUB_RUN_ID $GITHUB_SHA $DIGEST" < "$input"
