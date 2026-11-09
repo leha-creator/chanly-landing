@@ -40,5 +40,10 @@ defineProps({
   }
   &:disabled { opacity: .65; cursor: default; }
   &[aria-busy='true'] { cursor: progress; }
+  &.lime {
+    background: var(--highlight);
+    color: var(--ink);
+    &:enabled:hover { background: var(--white); }
+  }
 }
 </style>

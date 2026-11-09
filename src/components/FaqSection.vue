@@ -33,6 +33,9 @@ const questions = [
   </section>
 </template>
 <style scoped lang="scss">
+@media (min-width: 48.001rem) {
+  .split { grid-template-columns: 0.64fr 1fr; }
+}
 h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; }
 article { padding: 8px 0; margin-bottom: 10px; border-bottom: 1px solid var(--rule); }
 h3 { font-size: clamp(17px, 1.6vw, 24px); }

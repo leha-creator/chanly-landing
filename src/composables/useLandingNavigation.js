@@ -65,6 +65,16 @@ export function useLandingNavigation() {
     if (route.hash === hash) jump(hash)
     else router.push({ path: route.path, query: route.query, hash })
   }
+  function restoreFragmentFocus() {
+    const hash = globalThis.location.hash || '#top'
+    // History traversal can reset focus after the router has handled the fragment.
+    globalThis.requestAnimationFrame(() => {
+      if (!active || (route.hash || '#top') !== hash) return
+      const section = doc.getElementById(hash.slice(1))
+      if (doc.activeElement === doc.body || doc.activeElement === section)
+        section?.querySelector('h1,h2')?.focus({ preventScroll: true })
+    })
+  }
   const syncPreference = () => {
     reduced.value = preference.matches
   }
@@ -85,6 +95,7 @@ export function useLandingNavigation() {
     doc.addEventListener('click', follow)
     globalThis.addEventListener('scroll', measure, { passive: true })
     globalThis.addEventListener('resize', measure)
+    globalThis.addEventListener('hashchange', restoreFragmentFocus)
     if (globalThis.ResizeObserver && header) {
       sizeObserver = new globalThis.ResizeObserver(measure)
       sizeObserver.observe(header)
@@ -111,6 +122,7 @@ export function useLandingNavigation() {
     doc.removeEventListener('click', follow)
     globalThis.removeEventListener('scroll', measure)
     globalThis.removeEventListener('resize', measure)
+    globalThis.removeEventListener('hashchange', restoreFragmentFocus)
     sizeObserver?.disconnect()
   })
   return { reduced, pastHero }

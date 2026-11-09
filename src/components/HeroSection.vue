@@ -92,6 +92,9 @@ p {
 .sculpture img {
   position: absolute;
 }
+@media (min-width: 48.001rem) {
+  .words { align-self: start; }
+}
 .orbit {
   inset: 0;
   width: 100%;

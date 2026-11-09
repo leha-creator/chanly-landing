@@ -67,14 +67,6 @@ a {
     translate: 0 var(--reveal-rise);
   }
 }
-button.lime {
-  background: var(--highlight);
-  color: var(--ink);
-}
-button.lime:enabled:hover {
-  background: white;
-  color: var(--ink);
-}
 @media (max-width: 48rem) {
   .slice {
     padding: 40px var(--gutter);

@@ -1,8 +1,8 @@
 <script setup>
 import { useSectionReveal } from '../composables/useSectionReveal.js'
-import request from '../assets/images/benefit-request.jpg'
-import price from '../assets/images/benefit-price.jpg'
-import schedule from '../assets/images/benefit-schedule.jpg'
+import request from '../assets/images/benefit-request.svg'
+import price from '../assets/images/benefit-price.svg'
+import schedule from '../assets/images/benefit-schedule.svg'
 
 useSectionReveal()
 const items = [
@@ -11,18 +11,21 @@ const items = [
     'Канал в каталоге видят компании, которым интересна ваша аудитория. Вы решаете, какие предложения принять.',
     request,
     'Пример запроса на рекламу',
+    '#e5e0f5',
   ],
   [
     'Ваша цена.\nБез догадок.',
     'Устанавливайте стоимость и форматы размещения. Комиссия сервиса добавляется к цене для рекламодателя.',
     price,
     'Условия размещения и цена формата',
+    '#e8edcc',
   ],
   [
     'Рутина уходит\nза кадр.',
     'Публикация, снятие поста, маркировка и статусы заказов — в одном процессе. Больше внимания остаётся контенту.',
     schedule,
     'Пример расписания публикации',
+    '#e0e8eb',
   ],
 ]
 </script>
@@ -38,7 +41,7 @@ const items = [
       </div>
       <article
         data-reveal
-        v-for="([title, copy, image, alt], i) in items"
+        v-for="([title, copy, image, alt, color], i) in items"
         :key="title"
       >
         <small>0{{ i + 1 }}</small>
@@ -46,7 +49,9 @@ const items = [
           <h3>{{ title }}</h3>
           <p>{{ copy }}</p>
         </div>
-        <img loading="lazy" :src="image" :alt="alt" width="572" height="270" />
+        <div class="poster" :style="{ backgroundColor: color }">
+          <img class="card" loading="lazy" :src="image" :alt="alt" />
+        </div>
       </article>
     </div>
   </section>
@@ -76,9 +81,25 @@ h3 {
 small {
   color: var(--accent);
 }
-img {
-  width: 100%;
-  height: auto;
+.poster {
+  position: relative;
+  aspect-ratio: 572 / 270;
+  border-radius: 3.85% / 8.15%;
+  box-shadow: inset 5px 9px 18px 2px rgb(33 31 48 / 32%),
+    inset -2px -3px 5px rgb(255 255 255 / 70%);
+  container-type: inline-size;
+}
+.card {
+  position: absolute;
+  top: 8.89%;
+  left: 10.66%;
+  width: 78.68%;
+  border-radius: 3.15cqw;
+  box-shadow: 0 1.22cqw #dedee5, 0 1.55cqw 1cqw rgb(31 31 46 / 22%);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card { transition: transform 240ms ease-out; }
+  .poster:hover .card { transform: translateY(-8px) scale(1.025); }
 }
 p {
   max-width: 540px;

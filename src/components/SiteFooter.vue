@@ -49,5 +49,6 @@ footer {
     gap: 16px;
   }
 }
-@media (max-width:48rem){h2{font-size:43px}.invitation button{width:100%}.links{margin-top:20px;padding-top:0;border:0}}
+.invitation .button { width: min(320px, 100%); }
+@media (max-width:48rem){h2{font-size:43px}.invitation .button{width:100%}.links{margin-top:20px;padding-top:0;border:0}}
 </style>

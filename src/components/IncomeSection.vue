@@ -56,7 +56,7 @@ useSectionReveal()
           </div>
           <small
             >Итог зависит от спроса рекламодателей и выполненных заказов.</small
-          ><BaseButton class="lime" @click="connectChannel"
+          ><BaseButton @click="connectChannel"
             >Подключить канал</BaseButton
           >
         </div>
@@ -66,7 +66,7 @@ useSectionReveal()
 </template>
 <style scoped lang="scss">
 #income {
-  background: var(--white);
+  background: var(--paper);
   color: var(--ink);
 }
 .calculator {
@@ -111,6 +111,7 @@ input[type='range'] {
   justify-content: space-between;
 }
 .result {
+  align-self: start;
   border-radius: 16px;
   padding: 32px;
   background: #15162c;
@@ -118,7 +119,7 @@ input[type='range'] {
   align-content: center;
 }
 .result strong {
-  font-size: clamp(60px, 7vw, 104px);
+  font-size: clamp(44px, 4vw, 60px);
   line-height: 1;
 }
 .result button {
@@ -129,7 +130,13 @@ input[type='range'] {
   color: white;
 }
 .result p {
-  margin: 0;
+  margin: 16px 0 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #626279;
+}
+@media (min-width: 48.001rem) {
+  .inputs :deep(.field) { max-width: 320px; --field-bg: white; }
+  .placements-desktop strong { padding: 14px; border-radius: 8px; background: white; font-weight: 400; }
 }
 @media (max-width: 48rem) {
   .calculator {

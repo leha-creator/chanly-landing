@@ -145,7 +145,7 @@ textarea { color: var(--ink); }
   align-items: start;
   gap: 8px;
 }
-button {
+form .button {
   width: 100%;
 }
 @media (max-width: 48rem) {
