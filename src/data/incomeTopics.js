@@ -1,0 +1,21 @@
+// Ставка в копейках за 1 000 просмотров.
+export const incomeTopics = [
+  { id: 'greetings', label: 'Открытки / поздравления', rate: 30 },
+  { id: 'home', label: 'Дача / дом', rate: 35 },
+  { id: 'news', label: 'Новости и СМИ', rate: 65 },
+  { id: 'food', label: 'Еда и рецепты', rate: 72 },
+  { id: 'travel', label: 'Путешествия', rate: 75 },
+  { id: 'education', label: 'Образование', rate: 55 },
+  { id: 'technology', label: 'Технологии', rate: 81 },
+  { id: 'books', label: 'Книги', rate: 67 },
+  { id: 'sport', label: 'Спорт', rate: 33 },
+  { id: 'culture', label: 'Культура', rate: 35 },
+  { id: 'family', label: 'Семья', rate: 99 },
+  { id: 'pets', label: 'Животные', rate: 68 },
+  { id: 'cars', label: 'Автомобили', rate: 46 },
+  { id: 'fashion', label: 'Мода', rate: 72 },
+  { id: 'music', label: 'Музыка', rate: 91 },
+  { id: 'games', label: 'Игры', rate: 56 },
+  { id: 'crafts', label: 'Рукоделие', rate: 89 },
+  { id: 'science', label: 'Наука', rate: 69 },
+]
