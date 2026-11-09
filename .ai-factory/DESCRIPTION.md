@@ -14,7 +14,7 @@ Vue 3, Single-File Components с Composition API, SCSS для стилей ко�
 
 ## Архитектура
 
-GitHub Actions публикует проверенный пакет по SSH на dev.chanly.ru. За внешним Basic Auth корень домена показывает лендинг гостю или открывает приложение по действующей сессии. Выпуск и откат описаны в [README](../README.md).
+При push в dev GitHub Actions публикует проверенный пакет по SSH на dev.chanly.ru. При push в master собирает пакет для chanly.ru и сохраняет его как артефакт. За внешним Basic Auth корень домена показывает лендинг гостю или открывает приложение по действующей сессии. Выпуск и откат описаны в [README](../README.md).
 
 Сборка — Vite, проверки — ESLint и Vitest с Vue Test Utils. Шрифты Manrope, Inter и Lora поставляются локально через Fontsource. Плавная прокрутка использует Lenis с Vue-интеграцией. Команды разработки и сборки описаны в [README](../README.md).
 

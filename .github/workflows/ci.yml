@@ -1,6 +1,8 @@
 name: Проверка лендинга
 
 on:
+  push:
+    branches: [dev, master]
   pull_request:
   workflow_dispatch:
     inputs:
@@ -15,7 +17,7 @@ permissions:
 
 jobs:
   check:
-    if: github.event_name == 'pull_request' || inputs.operation == 'release'
+    if: github.event_name != 'workflow_dispatch' || inputs.operation == 'release'
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.package.outputs.digest }}
@@ -39,7 +41,7 @@ jobs:
       - name: Собрать сайт
         run: npm run build
         env:
-          VITE_AUTH_URL: /auth/login
+          VITE_AUTH_URL: ${{ github.ref == 'refs/heads/master' && 'https://chanly.ru/auth/login' || github.ref == 'refs/heads/dev' && 'https://dev.chanly.ru/auth/login' || '/auth/login' }}
       - name: Проверить и упаковать сборку
         id: package
         run: |
@@ -51,6 +53,18 @@ jobs:
           test ! -d dist/assets
           tar -czf landing.tar.gz -C dist .
           digest=$(sha256sum landing.tar.gz | cut -d' ' -f1)
+          python3 - "$GITHUB_SHA" "$digest" <<'PY'
+          from pathlib import Path
+          import sys
+          from tempfile import TemporaryDirectory
+          from deploy.release import prepare
+
+          with TemporaryDirectory() as tmp:
+              root = Path(tmp)
+              staging = root / "staging"
+              staging.mkdir()
+              prepare(root, staging, Path("landing.tar.gz"), sys.argv[1], sys.argv[2])
+          PY
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           echo "revision=$GITHUB_SHA run=$GITHUB_RUN_ID sha256=$digest"
       - uses: actions/upload-artifact@v4
@@ -63,10 +77,11 @@ jobs:
 
   deploy:
     if: >-
-      always() && !cancelled() && github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/master' &&
-      ((inputs.operation == 'release' && needs.check.result == 'success') ||
-       (inputs.operation == 'rollback' && needs.check.result == 'skipped'))
+      always() && !cancelled() && github.ref == 'refs/heads/dev' &&
+      ((github.event_name == 'push' && needs.check.result == 'success') ||
+       (github.event_name == 'workflow_dispatch' &&
+        ((inputs.operation == 'release' && needs.check.result == 'success') ||
+         (inputs.operation == 'rollback' && needs.check.result == 'skipped'))))
     needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -74,18 +89,18 @@ jobs:
       group: landing-dev-release
       cancel-in-progress: false
     environment:
-      name: production
+      name: dev
       url: https://dev.chanly.ru
     steps:
       - uses: actions/download-artifact@v4
-        if: inputs.operation == 'release'
+        if: github.event_name == 'push' || inputs.operation == 'release'
         with:
           artifact-ids: ${{ needs.check.outputs.artifact }}
           merge-multiple: true
       - name: Сверить пакет и отправить операцию выпуска
         env:
           DIGEST: ${{ needs.check.outputs.digest }}
-          OPERATION: ${{ inputs.operation }}
+          OPERATION: ${{ inputs.operation || 'release' }}
           SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
           GH_TOKEN: ${{ github.token }}
@@ -97,7 +112,7 @@ jobs:
             input=/dev/null
             DIGEST=$(sha256sum /dev/null | cut -d' ' -f1)
           fi
-          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq .object.sha)" = "$GITHUB_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/dev" --jq .object.sha)" = "$GITHUB_SHA"
           umask 077
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/landing

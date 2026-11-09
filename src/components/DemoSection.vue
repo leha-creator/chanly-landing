@@ -3,13 +3,13 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useLandingMotion } from '../stores/landingMotion.js'
 import { useSectionReveal } from '../composables/useSectionReveal.js'
 import connectScreen from '../assets/images/demo-connect.png'
-import connectRetina from '../assets/images/demo-connect@2x.png'
+import connectRetina from '../assets/images/demo-connect-2x.png'
 import channelsScreen from '../assets/images/demo-channels.png'
-import channelsRetina from '../assets/images/demo-channels@2x.png'
+import channelsRetina from '../assets/images/demo-channels-2x.png'
 import ordersScreen from '../assets/images/demo-orders.png'
-import ordersRetina from '../assets/images/demo-orders@2x.png'
+import ordersRetina from '../assets/images/demo-orders-2x.png'
 import paymentsScreen from '../assets/images/demo-payments.png'
-import paymentsRetina from '../assets/images/demo-payments@2x.png'
+import paymentsRetina from '../assets/images/demo-payments-2x.png'
 useSectionReveal()
 const steps = [
   {
