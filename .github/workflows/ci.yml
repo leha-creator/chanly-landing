@@ -1,6 +1,14 @@
 name: Проверка лендинга
 
-on: pull_request
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Операция на dev.chanly.ru
+        type: choice
+        options: [release, rollback]
+        required: true
 
 permissions:
   contents: read
@@ -8,6 +16,8 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.package.outputs.digest }}
     steps:
       - name: Получить исходный код
         uses: actions/checkout@v4
@@ -24,5 +34,24 @@ jobs:
         run: npm test
       - name: Собрать сайт
         run: npm run build
-      - name: Проверить точку входа сборки
-        run: test -s dist/index.html
+        env:
+          VITE_AUTH_URL: /auth/login
+      - name: Проверить и упаковать сборку
+        id: package
+        run: |
+          test -s dist/index.html
+          for extension in js css svg; do
+            asset=$(grep -oE "/landing-assets/[^\" ]+\.$extension" dist/index.html | head -1)
+            test -n "$asset" && test -s "dist$asset" || exit 1
+          done
+          test ! -d dist/assets
+          tar -czf landing.tar.gz -C dist .
+          digest=$(sha256sum landing.tar.gz | cut -d' ' -f1)
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          echo "revision=$GITHUB_SHA run=$GITHUB_RUN_ID sha256=$digest"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: landing-${{ github.run_id }}-${{ github.run_attempt }}
+          path: landing.tar.gz
+          retention-days: 14
+          if-no-files-found: error
