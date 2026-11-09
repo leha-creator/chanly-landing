@@ -27,6 +27,7 @@ it('keeps the value and associates a changing error with only its field', async 
   const errorId = name.element.id + '-error'
   expect(name.attributes('aria-describedby')).toBe('hint ' + errorId)
   expect(form.get('[id="' + errorId + '"]').text()).toBe('Уточните имя')
+  expect(name.element.value).toBe('Анна')
   form.vm.error = ''
   form.vm.disabled = false
   await form.vm.$nextTick()

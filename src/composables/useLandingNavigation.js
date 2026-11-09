@@ -21,11 +21,14 @@ export function useLandingNavigation() {
     sizeObserver,
     active = true
 
+  function headerInset() {
+    return header && globalThis.getComputedStyle(header).position === 'sticky' ? header.offsetHeight : 0
+  }
   function measure() {
     ribbon = doc.getElementById('ribbon')
     pastHero.value =
       !!ribbon &&
-      ribbon.getBoundingClientRect().top <= (header?.offsetHeight || 0) + 1
+      ribbon.getBoundingClientRect().top <= headerInset() + 1
   }
   function jump(hash, immediate = false) {
     const target = doc.getElementById((hash || '#top').slice(1))
@@ -40,7 +43,7 @@ export function useLandingNavigation() {
             0,
             globalThis.scrollY +
               target.getBoundingClientRect().top -
-              (header?.offsetHeight || 0),
+              headerInset(),
           )
     const engine = provider.value?.lenis
     if (engine && !reduced.value)

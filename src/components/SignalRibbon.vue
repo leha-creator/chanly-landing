@@ -60,12 +60,13 @@ const words = ['КОНТЕНТ', '→', 'АУДИТОРИЯ', '→', 'РЕКЛА
 }
 @media (prefers-reduced-motion: reduce) {
   .repeat {
-    min-width: 0;
+    min-width: 100vw;
     max-width: 100vw;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.5em;
   }
+  .repeat .arrow:last-child,
   .repeat[aria-hidden] {
     display: none;
   }

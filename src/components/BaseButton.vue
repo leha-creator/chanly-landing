@@ -25,7 +25,7 @@ defineProps({
   padding: 6px var(--button-inset);
   border: 0;
   border-radius: var(--button-radius);
-  background: var(--accent);
+  background: var(--button-fill, var(--accent));
   color: var(--white);
   font: 500 var(--button-font)/1.5 var(--font-body);
   cursor: pointer;

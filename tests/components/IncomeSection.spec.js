@@ -16,6 +16,15 @@ it('пересчитывает сумму при смене любой ввод�
     topics.element.selectedIndex = index
     await topics.trigger('change')
   }
+  const trigger = wrapper.get('[role=combobox]')
+  await trigger.trigger('keydown', { key: 'End' })
+  expect(trigger.attributes('aria-expanded')).toBe('true')
+  await trigger.trigger('keydown', { key: 'Escape' })
+  expect(amount()).toBe('3 ₽')
+  await trigger.trigger('keydown', { key: 'Н' })
+  await trigger.trigger('keydown', { key: 'Enter' })
+  expect(trigger.text()).toBe('Новости и СМИ')
+  expect(amount()).toBe('6,50 ₽')
   await choose(1)
   expect(amount()).toBe('3,50 ₽')
   await choose(2)

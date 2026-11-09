@@ -16,6 +16,7 @@ it('закрывает каждое уведомление независимо 
   notices.notify('error', 'Сбой')
   notices.notify('info', 'Информация')
   await nextTick()
+  expect(page.findAll('[role=status]')).toHaveLength(2)
   expect(page.get('[role=alert]').text()).toBe('Сбой')
   await page.get('[aria-label$="Информация"]').trigger('click')
   await vi.advanceTimersByTimeAsync(6999)

@@ -88,7 +88,15 @@ h3 {
   align-self: start;
   border-radius: 16px;
   padding: 32px;
-  background: var(--ink) url('../assets/images/pattern-stripes.svg') right 3px top / min(23%, 120px) auto no-repeat;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--ink);
+  &::before {
+    content: ''; position: absolute; z-index: -1; top: 0; right: 3px;
+    width: min(23%, 120px); aspect-ratio: 120 / 106; opacity: .25;
+    background: url('../assets/images/pattern-stripes.svg') center / cover; pointer-events: none;
+  }
   --focus-ring: var(--highlight);
   color: white;
   align-content: center;

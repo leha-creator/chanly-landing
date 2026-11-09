@@ -18,6 +18,7 @@ describe('BaseButton', () => {
       expect(onClick).toHaveBeenCalledTimes(1)
     }
     await button.setProps({ disabled: false })
+    expect(button.attributes('aria-busy')).toBeUndefined()
     button.element.click()
     expect(onClick).toHaveBeenCalledTimes(2)
   })

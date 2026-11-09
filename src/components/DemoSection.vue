@@ -3,9 +3,13 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useLandingMotion } from '../stores/landingMotion.js'
 import { useSectionReveal } from '../composables/useSectionReveal.js'
 import connectScreen from '../assets/images/demo-connect.png'
+import connectRetina from '../assets/images/demo-connect@2x.png'
 import channelsScreen from '../assets/images/demo-channels.png'
+import channelsRetina from '../assets/images/demo-channels@2x.png'
 import ordersScreen from '../assets/images/demo-orders.png'
+import ordersRetina from '../assets/images/demo-orders@2x.png'
 import paymentsScreen from '../assets/images/demo-payments.png'
+import paymentsRetina from '../assets/images/demo-payments@2x.png'
 useSectionReveal()
 const steps = [
   {
@@ -13,6 +17,7 @@ const steps = [
     description: 'Добавьте бота и подтвердите канал одноразовым кодом.',
     label: 'Подключение',
     image: connectScreen,
+    retina: connectRetina,
     screen: 'Подключение канала',
   },
   {
@@ -20,6 +25,7 @@ const steps = [
     description: 'Управляйте каналами и условиями размещения.',
     label: 'Форматы и цены',
     image: channelsScreen,
+    retina: channelsRetina,
     screen: 'Мои каналы',
   },
   {
@@ -27,6 +33,7 @@ const steps = [
     description: 'Изучите запрос, согласуйте публикацию и следите за статусом.',
     label: 'Размещение',
     image: ordersScreen,
+    retina: ordersRetina,
     screen: 'Запросы и размещения',
   },
   {
@@ -34,6 +41,7 @@ const steps = [
     description: 'После приёмки заказа проверьте выплату и документы.',
     label: 'Выплата',
     image: paymentsScreen,
+    retina: paymentsRetina,
     screen: 'Выплаты',
   },
 ]
@@ -43,8 +51,10 @@ const cycle = ref(0)
 const duration = 20_000
 const motion = useLandingMotion()
 const preference = globalThis.matchMedia('(prefers-reduced-motion: reduce)')
+const compactLayout = globalThis.matchMedia('(max-width: 64rem)')
+const compact = ref(compactLayout.matches)
 const reduced = ref(preference.matches)
-const playing = computed(() => Boolean(motion.shown.how) && !reduced.value)
+const playing = computed(() => Boolean(motion.shown.how) && !reduced.value && !compact.value)
 const current = computed(() => steps[active.value])
 let timer
 
@@ -60,12 +70,17 @@ function restart() {
 }
 
 function updatePreference() {
+  compact.value = compactLayout.matches
   reduced.value = preference.matches
 }
 
 watch(playing, restart, { immediate: true })
-onMounted(() => preference.addEventListener('change', updatePreference))
+onMounted(() => {
+  preference.addEventListener('change', updatePreference)
+  compactLayout.addEventListener('change', updatePreference)
+})
 onUnmounted(() => {
+  compactLayout.removeEventListener('change', updatePreference)
   preference.removeEventListener('change', updatePreference)
   globalThis.clearTimeout(timer)
 })
@@ -86,7 +101,8 @@ onUnmounted(() => {
           </article>
         </div>
         <figure data-reveal>
-          <img :src="current.image" :alt="'Кабинет Chanly — ' + current.screen" width="880" height="619" />
+          <img :src="current.image" :srcset="current.image + ' 1280w, ' + current.retina + ' 2560w'"
+            sizes="(max-width: 48rem) calc(100vw - 40px), (max-width: 64rem) calc(100vw - 128px), min(70vw, 972px)" :alt="'Кабинет Chanly — ' + current.screen" width="1280" height="900" />
           <figcaption>{{ current.screen }} в Chanly · демонстрационные данные</figcaption>
         </figure>
       </div>
@@ -157,17 +173,21 @@ figcaption { margin-top: 12px; color: #b7bbaf; font-size: 12px; }
   border-radius: 2px;
 }
 button { border: 0; background: transparent; color: inherit; font: inherit; padding: 0; text-align: inherit; cursor: pointer; }
-button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+button:focus-visible { outline: 3px solid var(--highlight); outline-offset: 3px; }
 article { position: relative; }
 h3 button::after { content: ''; position: absolute; inset: 0; }
 .progress [aria-current] { color: var(--highlight); }
 .bar { overflow: hidden; }
 .bar i { display: block; height: 100%; background: var(--highlight); transform-origin: left; }
 .bar i.playing { animation: fill var(--period) linear both; }
+@media (hover: hover) and (pointer: fine) {
+  button:hover { text-decoration: underline; text-underline-offset: .2em; }
+}
+button:active { opacity: .8; }
 @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .mobile-index, .mobile-controls { display: none; }
 
-@media (max-width: 48rem) {
+@media (max-width: 64rem) {
   h2 { line-height: 1.09; }
   .demo { grid-template-columns: 1fr; margin: 20px 0 16px; gap: 16px; }
   .steps { gap: 16px; }

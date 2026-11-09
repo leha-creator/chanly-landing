@@ -13,7 +13,9 @@ it('связывает четыре экрана со всеми переклю�
   vi.useFakeTimers()
   const media = new globalThis.EventTarget()
   media.matches = false
-  vi.stubGlobal('matchMedia', () => media)
+  const compact = new globalThis.EventTarget()
+  compact.matches = false
+  vi.stubGlobal('matchMedia', query => query.includes('max-width') ? compact : media)
   let intersect
   vi.stubGlobal('IntersectionObserver', class {
     constructor(callback) { intersect = callback }
@@ -65,6 +67,20 @@ it('связывает четыре экрана со всеми переклю�
   await nextTick()
   await vi.advanceTimersByTimeAsync(20_000)
   check(3)
+  for (const width of [390, 768, 1024]) {
+    compact.matches = width <= 1024
+    compact.dispatchEvent(new globalThis.Event('change'))
+    await nextTick()
+    expect(vi.getTimerCount()).toBe(0)
+    await vi.advanceTimersByTimeAsync(41_000)
+    check(3)
+    compact.matches = false
+    compact.dispatchEvent(new globalThis.Event('change'))
+    await nextTick()
+    expect(vi.getTimerCount()).toBe(1)
+    await vi.advanceTimersByTimeAsync(19_999)
+    check(3)
+  }
   wrapper.unmount()
   expect(vi.getTimerCount()).toBe(0)
 })

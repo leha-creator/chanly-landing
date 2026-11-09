@@ -8,6 +8,7 @@ const props = defineProps({
 const value = defineModel({ required: true })
 const id = useId()
 const root = ref(null)
+const trigger = ref(null)
 const open = ref(false)
 const active = ref(0)
 const selected = computed(() => props.options.findIndex(option => toRaw(option.value) === toRaw(value.value)))
@@ -16,7 +17,7 @@ let lastKey = 0
 
 function move(index) {
   active.value = Math.max(0, Math.min(index, props.options.length - 1))
-  nextTick(() => globalThis.document.getElementById(id + '-' + active.value)?.scrollIntoView({ block: 'nearest' }))
+  nextTick(() => globalThis.document.getElementById(id + '-' + active.value)?.scrollIntoView?.({ block: 'nearest' }))
 }
 function toggle() {
   open.value = !open.value
@@ -62,12 +63,12 @@ onUnmounted(() => globalThis.document.removeEventListener('pointerdown', outside
 </script>
 <template>
   <div ref="root" class="select-field">
-    <label :id="id + '-label'" :for="id">{{ label }}</label>
+    <label :id="id + '-label'" :for="id" @click="trigger?.focus()">{{ label }}</label>
     <div class="control">
       <select :id="id" v-model="value">
         <option v-for="option in options" :key="option.label" :value="option.value">{{ option.label }}</option>
       </select>
-      <button type="button" role="combobox" :aria-labelledby="id + '-label'"
+      <button ref="trigger" type="button" role="combobox" :aria-labelledby="id + '-label'"
         :aria-expanded="open" :aria-controls="id + '-list'"
         :aria-activedescendant="open ? id + '-' + active : undefined"
         @click="toggle" @keydown="keydown" @blur="open = false">{{ options[selected]?.label }}</button>

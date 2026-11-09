@@ -4,7 +4,7 @@
 
 ## Дизайн
 
-Реализуем макет **V3.4** со страницы **«Лендинг · правки 04»** в файле [Chanly Landing в Figma](https://www.figma.com/design/GABqUBOTgsEbLEfXUkrsJy/Chanly-Landing). Он определяет состав секций, тексты и изображения. Прямые ссылки на настольный и мобильный макеты для вёрстки собраны в [критериях приёмки](../docs/landing-requirements.md).
+Реализуем макет **V3.4** со страницы **«Лендинг · финал V3.4»** в файле [Chanly Landing в Figma](https://www.figma.com/design/GABqUBOTgsEbLEfXUkrsJy/Chanly-Landing). Он определяет состав секций, тексты и изображения. Прямые ссылки на настольный и мобильный макеты для вёрстки собраны в [критериях приёмки](../docs/landing-requirements.md).
 
 Для чтения макета в Codex настроен проектный MCP-сервер `figma`. При первом подключении выполните `codex mcp login figma` под учётной записью с доступом к файлу.
 

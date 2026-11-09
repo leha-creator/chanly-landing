@@ -22,6 +22,7 @@ import { connectChannel } from '../composables/useConnectChannel.js'
 </template>
 <style scoped lang="scss">
 .header {
+  --button-fill: var(--ink);
   position: sticky;
   top: 0;
   z-index: var(--layer-sticky);
@@ -52,6 +53,7 @@ a {
   text-decoration: none;
 }
 @media (max-width: 48rem) {
+  .header { position: static; }
   .header-row {
     padding: 12px 0 4px;
     flex-wrap: wrap;

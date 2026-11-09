@@ -71,6 +71,7 @@ article {
 }
 article::before {
   content: '';
+  opacity: .25;
   position: absolute;
   inset: 5px 4px auto auto;
   width: 21%;
