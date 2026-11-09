@@ -52,6 +52,17 @@ it('связывает якоря реальной страницы, реаги�
   expect(router.currentRoute.value.hash).toBe('#how')
   expect(smoothScroll).toHaveBeenCalledTimes(1)
   expect(globalThis.document.activeElement).toBe(page.get('#how h2').element)
+  // Chromium can restore body focus after a same-document history traversal.
+  const heading = page.get('#how h2').element
+  heading.blur()
+  globalThis.history.replaceState(null, '', '#how')
+  try {
+    globalThis.dispatchEvent(new globalThis.Event('hashchange'))
+    await new Promise(resolve => globalThis.requestAnimationFrame(resolve))
+    expect(globalThis.document.activeElement).toBe(heading)
+  } finally {
+    globalThis.history.replaceState(null, '', '/')
+  }
   media.matches = true
   media.dispatchEvent(new globalThis.Event('change'))
   await nextTick()
