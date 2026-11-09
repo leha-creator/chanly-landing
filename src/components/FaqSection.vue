@@ -1,12 +1,15 @@
 <script setup>
+import { ref } from 'vue'
 import { useSectionReveal } from '../composables/useSectionReveal.js'
+
 useSectionReveal()
+const opened = ref(0)
 const questions = [
-  'Кто может подключить канал?',
-  'Нужно ли публиковать пост вручную?',
-  'Можно ли отказаться от рекламы?',
-  'Когда придёт выплата?',
-  'Можно ли добавить несколько каналов?',
+  ['Кто может подключить канал?', 'Самозанятые, ИП и юридические лица — владельцы MAX-каналов. Понадобятся данные владельца, реквизиты и подключение бота.'],
+  ['Нужно ли публиковать пост вручную?', 'Публикация проходит по согласованному расписанию. За статусом заказа можно следить в кабинете.'],
+  ['Можно ли отказаться от рекламы?', 'Да. Вы можете отказаться от предложенного заказа.'],
+  ['Когда придёт выплата?', 'После приёмки заказа. Статус выплаты и документы появятся в кабинете.'],
+  ['Можно ли добавить несколько каналов?', 'Каналы доступны в разделе «Мои каналы». Для подключения каждого канала потребуется подтверждение.'],
 ]
 </script>
 <template>
@@ -14,37 +17,42 @@ const questions = [
     <div class="wrap split">
       <h2 data-reveal>Разберёмся.</h2>
       <div>
-        <article data-reveal v-for="(question, i) in questions" :key="question">
+        <article v-for="([question, answer], index) in questions" :key="question" data-reveal>
           <h3>
-            {{ question }}<span aria-hidden="true">{{ i ? '+' : '−' }}</span>
+            <button type="button" :aria-expanded="opened === index" :aria-controls="'faq-answer-' + index"
+              @click="opened = opened === index ? null : index">
+              {{ question }}<span aria-hidden="true">{{ opened === index ? '−' : '+' }}</span>
+            </button>
           </h3>
-          <p v-if="!i">
-            Самозанятые, ИП и юридические лица — владельцы MAX-каналов.
-            Понадобятся данные владельца, реквизиты и подключение бота.
-          </p>
+          <div :id="'faq-answer-' + index" class="answer" :inert="opened !== index || undefined" :class="{ open: opened === index }">
+            <div><p>{{ answer }}</p></div>
+          </div>
         </article>
       </div>
     </div>
   </section>
 </template>
 <style scoped lang="scss">
-h2 {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-}
-article {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 10px;
-}
-h3 {
+h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; }
+article { padding: 8px 0; margin-bottom: 10px; border-bottom: 1px solid var(--rule); }
+h3 { font-size: clamp(17px, 1.6vw, 24px); }
+button {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 16px;
-  font-size: clamp(17px, 1.6vw, 24px);
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 0;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
 }
-h3 span {
-  color: var(--accent);
-}
+button span { color: var(--accent); }
+.answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--motion-fast) var(--ease); }
+.answer.open { grid-template-rows: 1fr; }
+.answer > div { overflow: hidden; min-height: 0; }
 </style>
