@@ -14,7 +14,7 @@ useSectionReveal()
 const steps = [
   {
     title: 'Подключите канал',
-    description: 'Добавьте бота и подтвердите канал одноразовым кодом.',
+    description: 'Запустите бота, добавьте его администратором и выберите канал.',
     label: 'Подключение',
     image: connectScreen,
     retina: connectRetina,
