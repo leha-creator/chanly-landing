@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { useSectionReveal } from '../composables/useSectionReveal.js'
+import {ref} from 'vue'
+import {useSectionReveal} from '../composables/useSectionReveal.js'
 
 useSectionReveal()
 const opened = ref(0)
@@ -15,16 +15,17 @@ const questions = [
 <template>
   <section ref="section" id="faq" class="slice">
     <div class="wrap split">
-      <h2 data-reveal>Разберёмся.</h2>
+      <h2 data-reveal>Как всё устроено?</h2>
       <div>
         <article v-for="([question, answer], index) in questions" :key="question" data-reveal>
           <h3>
             <button type="button" :aria-expanded="opened === index" :aria-controls="'faq-answer-' + index"
-              @click="opened = opened === index ? null : index">
+                    @click="opened = opened === index ? null : index">
               {{ question }}<span aria-hidden="true">{{ opened === index ? '−' : '+' }}</span>
             </button>
           </h3>
-          <div :id="'faq-answer-' + index" class="answer" :inert="opened !== index || undefined" :class="{ open: opened === index }">
+          <div :id="'faq-answer-' + index" class="answer" :inert="opened !== index || undefined"
+               :class="{ open: opened === index }">
             <div><p>{{ answer }}</p></div>
           </div>
         </article>
@@ -34,12 +35,34 @@ const questions = [
 </template>
 <style scoped lang="scss">
 @media (min-width: 48.001rem) {
-  .split { grid-template-columns: 0.64fr 1fr; }
+  .split {
+    grid-template-columns: 0.64fr 1fr;
+  }
 }
-h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(40px, 3.89vw, 56px); letter-spacing: -.04em; }
-article { padding: 0 0 2px; margin-bottom: 24px; border-bottom: 1px solid var(--rule); }
-article:last-child { margin-bottom: 0; }
-h3 { font: 500 20px/1.5 var(--font-body); letter-spacing: normal; }
+
+h2 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(40px, 3.89vw, 56px);
+  letter-spacing: -.04em;
+}
+
+article {
+  padding: 0 0 2px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+article:last-child {
+  margin-bottom: 0;
+}
+
+h3 {
+  font: 500 20px/1.5 var(--font-body);
+  letter-spacing: normal;
+}
+
 button {
   display: flex;
   justify-content: space-between;
@@ -55,25 +78,72 @@ button {
   font: inherit;
   cursor: pointer;
 }
+
 @media (hover: hover) and (pointer: fine) {
-  button:hover { color: var(--accent-hover); }
+  button:hover {
+    color: var(--accent-hover);
+  }
 }
-button:active { color: var(--accent-pressed); }
+
+button:active {
+  color: var(--accent-pressed);
+}
+
 button span {
-  flex: 0 0 24px; height: 24px; font-size: 0;
+  flex: 0 0 24px;
+  height: 24px;
+  font-size: 0;
   background: url('../assets/images/faq-plus.svg') center / contain no-repeat;
 }
-button[aria-expanded=true] span { background-image: url('../assets/images/faq-close.svg'); }
-.answer p { color: #606458; margin: 2px 0 14px; }
-@media (max-width: 48rem) {
-  h2 { font-size: 40px; line-height: 1.09; }
-  h3 { font-size: 17px; line-height: 1.4; }
-  .split { gap: 20px; }
-  article { padding: 8px 0 10px; margin-bottom: 0; }
-  .answer p { margin: 0 0 12px; font-size: 15px; line-height: 1.4; }
-  button span, button[aria-expanded=true] span { background: none; font: 500 21px/24px var(--font-body); }
+
+button[aria-expanded=true] span {
+  background-image: url('../assets/images/faq-close.svg');
 }
-.answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--motion-fast) var(--ease); }
-.answer.open { grid-template-rows: 1fr; }
-.answer > div { overflow: hidden; min-height: 0; }
+
+.answer p {
+  color: #606458;
+  margin: 2px 0 14px;
+}
+
+@media (max-width: 48rem) {
+  h2 {
+    font-size: 40px;
+    line-height: 1.09;
+  }
+  h3 {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .split {
+    gap: 20px;
+  }
+  article {
+    padding: 8px 0 10px;
+    margin-bottom: 0;
+  }
+  .answer p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  button span, button[aria-expanded=true] span {
+    background: none;
+    font: 500 21px/24px var(--font-body);
+  }
+}
+
+.answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--motion-fast) var(--ease);
+}
+
+.answer.open {
+  grid-template-rows: 1fr;
+}
+
+.answer > div {
+  overflow: hidden;
+  min-height: 0;
+}
 </style>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="031cad64-02b1-4161-8c17-fdf668355465" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/components/BenefitsSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BenefitsSection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ContactSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ContactSection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/FaqSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FaqSection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HeroSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HeroSection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/IncomeSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/IncomeSection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SignalRibbon.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SignalRibbon.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SiteFooter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SiteFooter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TermsSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TermsSection.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="3LyBmNjHEYy8LDfxOg5ZemF2GxK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "dev",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "E:\\Program Files\\WebStorm 2024.1.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="031cad64-02b1-4161-8c17-fdf668355465" name="Changes" comment="" />
+      <created>1794416587788</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1794416587788</updated>
+      <workItem from="1794416589566" duration="5871000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

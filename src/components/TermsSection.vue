@@ -23,7 +23,7 @@ const terms = [
 <template>
   <section ref="section" id="terms" class="slice">
     <div class="wrap">
-      <h2 data-reveal>Понятные условия.<br />Спокойная работа.</h2>
+      <h2 data-reveal>Понятные условия<br />Спокойная работа</h2>
       <div class="grid">
         <article data-reveal v-for="([title, copy], i) in terms" :key="title">
           <small>0{{ i + 1 }}</small>

@@ -14,7 +14,7 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
   <section id="top" class="hero" :class="{ intro: playIntro }">
     <div class="wrap">
       <div class="words">
-        <h1>Канал ваш.<br />Доход <em>тоже.</em></h1>
+        <h1>Зарабатывайте на рекламе <br><em>в MAX</em></h1>
         <p>
           Вы собираете вокруг себя людей.<br />Мы помогаем превратить это в
           заработок<br class="desktop-break" /> на рекламных размещениях.
@@ -58,7 +58,7 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
   gap: 28px;
 }
 h1 {
-  font-size: clamp(48px, 6.8vw, 98px);
+  font-size: clamp(48px, 6vw, 92px);
   line-height: 1;
 }
 em {
@@ -76,6 +76,7 @@ p {
   align-items: center;
   gap: 24px;
   flex-wrap: wrap;
+  margin-top: 42px;
 }
 .actions button {
   --button-width: 280px;
@@ -185,6 +186,21 @@ p {
   }
   to {
     transform: translateY(-18px);
+  }
+}
+
+@media(max-width:768px){
+  .sculpture{
+    max-width:100%;
+  }
+  .actions a{
+    text-align: center;
+  }
+}
+
+@media(max-width: 567px){
+  h1{
+    font-size: clamp(45px, 6vw, 72px);
   }
 }
 </style>
