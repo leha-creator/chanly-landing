@@ -1,4 +1,5 @@
 <script setup>
+import BaseHeading from './BaseHeading.vue'
 import {ref} from 'vue'
 import {useSectionReveal} from '../composables/useSectionReveal.js'
 
@@ -13,20 +14,55 @@ const questions = [
 ]
 </script>
 <template>
-  <section ref="section" id="faq" class="slice">
-    <div class="wrap split">
-      <h2 data-reveal>Как всё устроено?</h2>
+  <section
+    id="faq"
+    ref="section"
+    class="faq slice"
+  >
+    <div class="faq__content wrap split">
+      <BaseHeading
+        italic
+        class="faq__head"
+        data-reveal
+      >
+        Как всё устроено?
+      </BaseHeading>
       <div>
-        <article v-for="([question, answer], index) in questions" :key="question" data-reveal>
-          <h3>
-            <button type="button" :aria-expanded="opened === index" :aria-controls="'faq-answer-' + index"
-                    @click="opened = opened === index ? null : index">
-              {{ question }}<span aria-hidden="true">{{ opened === index ? '−' : '+' }}</span>
+        <article
+          v-for="([question, answer], index) in questions"
+          :key="question"
+          class="faq__item"
+          data-reveal
+        >
+          <BaseHeading
+            :level="3"
+            size="card"
+            class="faq__question"
+          >
+            <button
+              class="faq__toggle"
+              type="button"
+              :aria-expanded="opened === index"
+              :aria-controls="'faq-answer-' + index"
+              @click="opened = opened === index ? null : index"
+            >
+              {{ question }}<span
+                class="faq__icon"
+                aria-hidden="true"
+              >{{ opened === index ? '−' : '+' }}</span>
             </button>
-          </h3>
-          <div :id="'faq-answer-' + index" class="answer" :inert="opened !== index || undefined"
-               :class="{ open: opened === index }">
-            <div><p>{{ answer }}</p></div>
+          </BaseHeading>
+          <div
+            :id="'faq-answer-' + index"
+            class="faq__answer"
+            :inert="opened !== index || undefined"
+            :class="{ 'faq__answer--open': opened === index }"
+          >
+            <div class="faq__answer-body">
+              <p class="faq__copy">
+                {{ answer }}
+              </p>
+            </div>
           </div>
         </article>
       </div>
@@ -34,116 +70,57 @@ const questions = [
   </section>
 </template>
 <style scoped lang="scss">
-@media (min-width: 48.001rem) {
-  .split {
-    grid-template-columns: 0.64fr 1fr;
+@use '../assets/styles/tools' as styles;
+
+.faq {
+  &__head { font-size: clamp(40px, 3.89vw, 56px); }
+  &__item {
+    padding: 0 0 2px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+
+    &:last-child { margin-bottom: 0; }
   }
-}
+  &__question { font: 500 20px/1.5 var(--font-body); letter-spacing: normal; }
+  &__toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 44px;
+    padding: 6px 0;
+    background: transparent;
+    color: inherit;
+    border: 0;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
 
-h2 {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(40px, 3.89vw, 56px);
-  letter-spacing: -.04em;
-}
-
-article {
-  padding: 0 0 2px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--rule);
-}
-
-article:last-child {
-  margin-bottom: 0;
-}
-
-h3 {
-  font: 500 20px/1.5 var(--font-body);
-  letter-spacing: normal;
-}
-
-button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  min-height: 44px;
-  padding: 6px 0;
-  background: transparent;
-  color: inherit;
-  border: 0;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  button:hover {
-    color: var(--accent-hover);
+    @include styles.hover { &:hover { color: var(--accent-hover); } }
+    &:active { color: var(--accent-pressed); }
+    &[aria-expanded=true] .faq__icon { background-image: url('../assets/images/faq-close.svg'); }
   }
-}
+  &__icon { flex: 0 0 24px; height: 24px; font-size: 0; background: url('../assets/images/faq-plus.svg') center / contain no-repeat; }
+  &__copy { color: #606458; margin: 2px 0 14px; }
+  &__answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--motion-fast) var(--ease);
 
-button:active {
-  color: var(--accent-pressed);
-}
-
-button span {
-  flex: 0 0 24px;
-  height: 24px;
-  font-size: 0;
-  background: url('../assets/images/faq-plus.svg') center / contain no-repeat;
-}
-
-button[aria-expanded=true] span {
-  background-image: url('../assets/images/faq-close.svg');
-}
-
-.answer p {
-  color: #606458;
-  margin: 2px 0 14px;
-}
-
-@media (max-width: 48rem) {
-  h2 {
-    font-size: 40px;
-    line-height: 1.09;
+    &--open { grid-template-rows: 1fr; }
   }
-  h3 {
-    font-size: 17px;
-    line-height: 1.4;
-  }
-  .split {
-    gap: 20px;
-  }
-  article {
-    padding: 8px 0 10px;
-    margin-bottom: 0;
-  }
-  .answer p {
-    margin: 0 0 12px;
-    font-size: 15px;
-    line-height: 1.4;
-  }
-  button span, button[aria-expanded=true] span {
-    background: none;
-    font: 500 21px/24px var(--font-body);
-  }
-}
+  &__answer-body { overflow: hidden; min-height: 0; }
 
-.answer {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--motion-fast) var(--ease);
-}
+  @media (min-width: 48.001rem) { &__content { grid-template-columns: 0.64fr 1fr; } }
 
-.answer.open {
-  grid-template-rows: 1fr;
-}
-
-.answer > div {
-  overflow: hidden;
-  min-height: 0;
+  @include styles.mobile {
+    &__head { font-size: 40px; line-height: 1.09; }
+    &__question { font-size: 17px; line-height: 1.4; }
+    &__content { gap: 20px; }
+    &__item { padding: 8px 0 10px; margin-bottom: 0; }
+    &__copy { margin: 0 0 12px; font-size: 15px; line-height: 1.4; }
+    &__icon, &__toggle[aria-expanded=true] .faq__icon { background: none; font: 500 21px/24px var(--font-body); }
+  }
 }
 </style>

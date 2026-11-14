@@ -1,0 +1,31 @@
+@use 'tools';
+
+.slice {
+  padding: 80px var(--gutter);
+
+  @include tools.mobile {
+    padding-block: 40px;
+  }
+}
+
+.wrap {
+  @include tools.container;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 6%;
+
+  @include tools.mobile {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.dark {
+  --focus-ring: var(--highlight);
+  --link-hover: var(--highlight);
+  background: var(--ink);
+  color: var(--paper);
+}

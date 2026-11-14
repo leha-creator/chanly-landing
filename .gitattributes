@@ -1,0 +1,2 @@
+# Shell hooks must remain executable after a Windows checkout.
+/.husky/** text eol=lf

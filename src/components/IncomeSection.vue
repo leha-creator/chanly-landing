@@ -1,4 +1,5 @@
 <script setup>
+import BaseHeading from './BaseHeading.vue'
 import {useSectionReveal} from '../composables/useSectionReveal.js'
 import BaseSelect from './BaseSelect.vue'
 import BaseRange from './BaseRange.vue'
@@ -29,228 +30,179 @@ const period = computed(() => placements.value === 1
 useSectionReveal()
 </script>
 <template>
-  <section ref="section" id="income" class="slice">
+  <section
+    id="income"
+    ref="section"
+    class="income slice"
+  >
     <div class="wrap">
-      <h2 data-reveal>Сколько может приносить<br/>ваш канал?</h2>
-      <p data-reveal>Выберите тематику и укажите средние просмотры поста.</p>
-      <div class="calculator">
-        <div data-reveal class="inputs">
-          <h3>Ваш сценарий дохода</h3>
-          <BaseSelect v-model="topic" label="Тематика канала" :options="topicOptions"/>
-          <BaseField v-model="views" label="Средние просмотры поста" inputmode="numeric"
-                     :error="estimate === null ? 'Введите целое число просмотров от нуля в допустимом диапазоне.' : ''"/>
-          <BaseRange v-model="placements" class="placements-desktop" label="Размещений в месяц"
-                     :text="placementCount(placements)" :min="1" :max="12"/>
-          <BaseSelect v-model="placements" class="placements-mobile" label="Размещений в месяц"
-                      :options="placementOptions"/>
-          <small>Оценка до налогов. Число заказов может меняться.</small>
+      <BaseHeading
+        class="income__head"
+        data-reveal
+      >
+        Сколько может приносить<br>ваш канал?
+      </BaseHeading>
+      <p
+        class="income__copy"
+        data-reveal
+      >
+        Выберите тематику и укажите средние просмотры поста.
+      </p>
+      <div class="income__body">
+        <div
+          data-reveal
+          class="income__inputs"
+        >
+          <BaseHeading
+            :level="3"
+            size="card"
+            class="income__input-head"
+          >
+            Ваш сценарий дохода
+          </BaseHeading>
+          <BaseSelect
+            v-model="topic"
+            label="Тематика канала"
+            :options="topicOptions"
+          />
+          <BaseField
+            v-model="views"
+            label="Средние просмотры поста"
+            inputmode="numeric"
+            :error="estimate === null ? 'Введите целое число просмотров от нуля в допустимом диапазоне.' : ''"
+          />
+          <BaseRange
+            v-model="placements"
+            class="income__placements income__placements--desktop"
+            label="Размещений в месяц"
+            :text="placementCount(placements)"
+            :min="1"
+            :max="12"
+          />
+          <BaseSelect
+            v-model="placements"
+            class="income__placements income__placements--mobile"
+            label="Размещений в месяц"
+            :options="placementOptions"
+          />
+          <small class="income__disclaimer">Оценка до налогов. Число заказов может меняться.</small>
         </div>
-        <div data-reveal class="result">
-          <div role="status" aria-atomic="true">
-            <strong>{{ estimate === null ? "—" : formatIncome(estimate) }}</strong>
-            <p v-if="estimate !== null">{{ period }}</p>
+        <div
+          data-reveal
+          class="income__result"
+        >
+          <div
+            role="status"
+            aria-atomic="true"
+          >
+            <strong class="income__amount">{{ estimate === null ? "—" : formatIncome(estimate) }}</strong>
+            <p
+              v-if="estimate !== null"
+              class="income__period"
+            >
+              {{ period }}
+            </p>
           </div>
-          <small
-          >Итог зависит от спроса рекламодателей и выполненных заказов.</small
+          <small class="income__result-note">Итог зависит от спроса рекламодателей и выполненных заказов.</small>
+          <BaseButton
+            class="income__action"
+            @click="connectChannel"
           >
-          <BaseButton @click="connectChannel"
-          >Подключить канал
-          </BaseButton
-          >
+            Подключить канал
+          </BaseButton>
         </div>
       </div>
     </div>
   </section>
 </template>
 <style scoped lang="scss">
-#income {
-  padding-block: 64px;
-  background: var(--paper);
-  color: #182230;
+@use '../assets/styles/tools' as styles;
+
+.income {
   --field-label: #5d687a;
   --field-height: 58px;
   --field-radius: 12px;
-}
-
-.wrap > p {
-  margin: 40px 0;
-  font-size: 18px;
-  color: var(--field-label);
-}
-
-.calculator {
-  margin-top: 0;
-  background: #f7f7fc;
-  color: var(--ink);
-  padding: 40px;
-  display: grid;
-  grid-template-columns: minmax(0, 660fr) minmax(0, 524fr);
-  gap: clamp(24px, 3.34vw, 48px);
-  border-radius: 28px;
-}
-
-.inputs,
-.result,
-label {
-  display: grid;
-  gap: 10px;
-}
-
-.inputs {
-  gap: 24px;
+  padding-block: 64px;
+  background: var(--paper);
   color: #182230;
 
-  > small {
-    font-size: 12px;
-    color: var(--field-label);
+  &__copy { margin: 40px 0; font-size: 18px; color: var(--field-label); }
+
+  &__body {
+    display: grid;
+    grid-template-columns: minmax(0, 660fr) minmax(0, 524fr);
+    gap: clamp(24px, 3.34vw, 48px);
+    padding: 40px;
+    border-radius: 28px;
+    background: #f7f7fc;
+    color: var(--ink);
   }
 
-  :deep(label) {
-    color: var(--field-label);
-    font-weight: 500;
-  }
-}
+  &__inputs {
+    display: grid;
+    gap: 24px;
+    color: #182230;
 
-h3 {
-  font-size: 32px;
-}
-
-.result {
-  align-self: start;
-  border-radius: 24px;
-  padding: 32px;
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: var(--ink);
-
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    background: url('../assets/images/income-mark-stripes.svg') right top / var(--mark-width, 23%) auto no-repeat;
-    pointer-events: none;
+    :deep(label) { color: var(--field-label); font-weight: 500; }
   }
 
-  --focus-ring: var(--highlight);
-  color: white;
-  align-content: start;
-  gap: 20px;
-}
+  &__disclaimer { font-size: 12px; color: var(--field-label); }
+  &__input-head { font-size: 32px; }
 
-.result strong {
-  display: block;
-  max-width: 82%;
-  font: 700 clamp(44px, 4.17vw, 60px)/1.12 var(--font-heading);
-  letter-spacing: -.03em;
-}
-
-.result button {
-  margin-top: 0;
-  width: 100%;
-  border-radius: 12px;
-}
-
-.result small {
-  color: #c5c6d5;
-  font-size: 13px;
-}
-
-.result p {
-  color: #c5c6d5;
-  margin: 20px 0 0;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #626279;
-}
-
-:deep(.field) {
-  width: 100%;
-}
-
-@media (min-width: 48.001rem) {
-  .inputs :deep(.field) {
-    --field-bg: white;
-  }
-}
-
-@media (max-width: 48rem) {
-  .calculator {
-    grid-template-columns: 1fr;
-    padding: 16px;
+  &__result {
+    --focus-ring: var(--highlight);
+    display: grid;
     gap: 20px;
-    margin-top: 20px;
+    align-self: start;
+    align-content: start;
+    min-width: 0;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    border-radius: 24px;
+    padding: 32px;
+    background: var(--ink);
+    color: var(--white);
+
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background: url('../assets/images/income-mark-stripes.svg') right top / var(--mark-width, 23%) auto no-repeat;
+      pointer-events: none;
+    }
   }
-  #income {
-    padding-block: 40px;
+
+  &__amount { display: block; max-width: 82%; font: 700 clamp(44px, 4.17vw, 60px)/1.12 var(--font-heading); letter-spacing: -.03em; }
+  &__action { margin-top: 0; width: 100%; border-radius: 12px; }
+  &__result-note { color: #c5c6d5; font-size: 13px; }
+  &__period { color: #c5c6d5; margin: 20px 0 0; padding-bottom: 20px; border-bottom: 1px solid #626279; }
+  &__placements--mobile { display: none; }
+
+  @media (min-width: 48.001rem) {
+    &__inputs { --field-bg: var(--white); }
+  }
+
+  @include styles.mobile {
     --field-height: 49px;
     --field-radius: 8px;
-  }
-  h2 {
-    line-height: 1.09;
-  }
-  .wrap > p {
-    margin: 20px 0;
-    font-size: 16px;
-    line-height: 1.4;
-  }
-  .result {
-    border-radius: 12px;
-    padding: 16px;
-    --mark-width: 20%;
-  }
-}
+    padding-block: 40px;
 
-.placements-mobile {
-  display: none;
-}
-
-.result {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-@media (max-width: 48rem) {
-  .placements-desktop {
-    display: none;
-  }
-  .placements-mobile {
-    display: grid;
-  }
-  .inputs {
-    gap: 10px;
-  }
-  .inputs > small {
-    font-size: 13px;
-  }
-  .inputs h3 {
-    font-size: 23px;
-    line-height: 1.4;
-  }
-  .result {
-    gap: 8px;
-  }
-  .result small {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  .result p {
-    font-size: 15px;
-    line-height: 1.4;
-    margin-top: 8px;
-    padding: 0;
-    border: 0;
-  }
-  .result strong {
-    font-size: 44px;
-  }
-  .result button {
-    border-radius: 28px;
-    --button-font: 15px;
-    --button-height: 45px;
-  }
-  .calculator {
-    gap: 12px;
+    &__head { line-height: 1.09; }
+    &__copy { margin: 20px 0; font-size: 16px; line-height: 1.4; }
+    &__body { grid-template-columns: 1fr; padding: 16px; gap: 12px; margin-top: 20px; }
+    &__result { --mark-width: 20%; border-radius: 12px; padding: 16px; gap: 8px; }
+    &__inputs { gap: 10px; }
+    &__disclaimer { font-size: 13px; }
+    &__input-head { font-size: 23px; line-height: 1.4; }
+    &__placements--desktop { display: none; }
+    &__placements--mobile { display: grid; }
+    &__result-note { font-size: 14px; line-height: 1.4; }
+    &__period { font-size: 15px; line-height: 1.4; margin-top: 8px; padding: 0; border: 0; }
+    &__amount { font-size: 44px; }
+    &__action { --button-font: 15px; --button-height: 45px; border-radius: 28px; }
   }
 }
 </style>

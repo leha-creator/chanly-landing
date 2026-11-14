@@ -1,0 +1,23 @@
+// Общая геометрия полей; раскладкой и состояниями управляет сам компонент.
+@mixin field-layout {
+  display: grid;
+  gap: var(--gap);
+  font-size: 13px;
+}
+
+@mixin field-surface($background: var(--white), $line-height: 1.5) {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--field-height);
+  border: 1px solid var(--rule);
+  border-radius: var(--field-radius);
+  background: $background;
+  color: var(--ink);
+  font: 400 var(--field-font)/#{$line-height} var(--font-body);
+}
+
+@mixin control-focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}

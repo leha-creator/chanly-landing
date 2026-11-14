@@ -1,0 +1,69 @@
+@use 'tools';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--font-body);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font: 700 1em/1.12 var(--font-heading);
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 12px 0;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring, var(--focus));
+  outline-offset: 3px;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  transition: color var(--motion-fast), background-color var(--motion-fast),
+    border-color var(--motion-fast), box-shadow var(--motion-fast);
+}
+
+nav a,
+footer a {
+  @include tools.hover {
+    &:hover {
+      color: var(--link-hover, var(--accent-hover));
+      text-decoration: underline;
+    }
+  }
+
+  &:active {
+    text-decoration: underline;
+  }
+}

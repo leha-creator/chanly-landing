@@ -1,0 +1,15 @@
+@use 'tools';
+
+@include tools.motion {
+  [data-reveal] {
+    transition:
+      opacity var(--reveal-time) var(--reveal-ease),
+      translate var(--reveal-time) var(--reveal-ease);
+    transition-delay: calc(var(--order, 0) * var(--reveal-step));
+  }
+
+  [data-waiting] [data-reveal] {
+    opacity: 0;
+    translate: 0 var(--reveal-rise);
+  }
+}

@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint . --max-warnings 0",
-    "build": "vite build",
+    "lint:fix": "npm run lint -- --fix",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "prepare": "husky",
+    "build": "npm run typecheck && vite build",
     "preview": "vite preview",
     "test": "vitest run"
   },
@@ -22,15 +25,26 @@
     "vue": "^3.5.0",
     "vue-router": "^4.5.0"
   },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
+    "@types/node": "^24.19.2",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.9.1",
     "eslint": "^9.39.0",
     "eslint-plugin-vue": "^10.0.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "sass": "^1.90.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.2",
     "vite": "^7.3.0",
-    "vitest": "^3.2.6"
+    "vitest": "^3.2.6",
+    "vue-tsc": "^3.3.14"
   }
 }

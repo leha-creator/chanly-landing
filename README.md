@@ -17,20 +17,26 @@ npm run dev
 
 | Команда | Результат |
 | --- | --- |
-| `npm run lint` | ESLint проверяет JavaScript и Vue SFC. |
+| `npm run lint` | ESLint проверяет JavaScript, TypeScript и Vue SFC с Vue recommended. |
+| `npm run lint:fix` | Исправляет нарушения, для которых ESLint поддерживает autofix. |
+| `npm run typecheck` | Vue-tsc и TypeScript проверяют типы приложения и конфигурации инструментов. |
 | `npm test` | Vitest один раз запускает тесты компонентов. |
-| `npm run build` | Vite создаёт production-сборку в `dist/`. |
+| `npm run build` | Проверяет типы и создаёт production-сборку Vite в `dist/`. |
 | `npm run preview` | Запускает локальный просмотр последней сборки. |
 
 Для визуальной приёмки запустите `npm run build`, затем `npm run preview`. В чистом профиле проверьте страницу на ширине 1440 px и на экране 390 × 844. Перед полноразмерным снимком прокрутите все девять секций, дождитесь появления содержимого и загрузки изображений. Для проверки якорей откройте `/#faq` напрямую, перейдите в другой раздел и нажмите «Назад». Заголовок вопросов должен получить фокус и остаться видимым под шапкой.
 
 Каждый pull request проходит чистую установку, ESLint, Vitest, тесты выпуска на Linux и сборку. CI проверяет ссылки на JS, CSS и иконку в `dist/index.html`. [Workflow](.github/workflows/ci.yml)
 
+`npm ci` устанавливает локальный Husky hook. Перед каждым коммитом он запускает `lint`, затем `typecheck` для всего рабочего дерева, включая неподготовленные изменения. Ошибка останавливает коммит; hook не исправляет и не добавляет файлы в индекс. Для исправления используйте `lint:fix` отдельно и просмотрите diff.
+
 ## Работа с компонентами
 
-[BaseButton](src/components/BaseButton.vue) по умолчанию имеет тип `button`; для отправки формы передайте `type="submit"`. Свойства `disabled` и `loading` блокируют действие. [BaseField](src/components/BaseField.vue) принимает `label`, `v-model` и текст `error`. Состояние формы остаётся у вызывающего компонента.
+[BaseHeading](src/components/BaseHeading.vue) разделяет семантический `level` и визуальный `size`, поддерживает `italic` и выделение через `<em>`. [BaseButton](src/components/BaseButton.vue) принимает `tone="accent|highlight"`; для отправки формы передайте `type="submit"`. Свойства `disabled` и `loading` блокируют действие. [BaseField](src/components/BaseField.vue) принимает `label`, `v-model` и текст `error`. Состояние формы остаётся у вызывающего компонента.
 
 Общие цвета, размеры и параметры движения находятся в [теме](src/assets/styles/_tokens.scss). Состав секций, ссылки на оба макета Figma и критерии приёмки приведены в [требованиях к лендингу](docs/landing-requirements.md).
+
+[Стили, общие компоненты и TypeScript](docs/frontend-conventions.md) — структура SCSS, BEM-вложенность, API компонентов и постепенный переход на TypeScript.
 
 ## Страница и навигация
 

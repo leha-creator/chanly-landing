@@ -10,6 +10,8 @@
 | [src/main.js](src/main.js), [src/App.vue](src/App.vue) | Подключение Router, Pinia, темы и общего каркаса |
 | [src/router/index.js](src/router/index.js), [src/views/](src/views/) | Маршруты и страницы |
 | [src/components/](src/components/), [src/assets/styles/](src/assets/styles/) | Общие компоненты и SCSS-тема |
+| [BaseHeading](src/components/BaseHeading.vue), [docs/frontend-conventions.md](docs/frontend-conventions.md) | API дизайн-компонентов, BEM и организация SCSS |
+| [eslint.config.js](eslint.config.js), [tsconfig.json](tsconfig.json), [tsconfig.node.json](tsconfig.node.json), [.husky/pre-commit](.husky/pre-commit) | Vue/TypeScript lint, проверка типов и проверки перед коммитом |
 | [HomeView](src/views/HomeView.vue), [SiteLayout](src/layout/SiteLayout.vue) | Порядок секций, шапка, подвал и единый экземпляр Lenis |
 | [src/composables/](src/composables/), [src/stores/landingMotion.js](src/stores/landingMotion.js) | Якоря, действие подключения, появление секций и память показа |
 | [tests/motion/](tests/motion/), [tests/navigation/](tests/navigation/) | Проверки уменьшенного движения, повторного входа и якорей |

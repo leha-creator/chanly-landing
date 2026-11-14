@@ -33,7 +33,7 @@ it('пересчитывает сумму при смене любой ввод�
   expect(amount()).toBe('18 000 ₽')
   await wrapper.get('input[type=range]').setValue(12)
   expect(amount()).toBe('36 000 ₽')
-  await wrapper.get('.placements-mobile select').setValue('4')
+  await wrapper.get('.income__placements--mobile select').setValue('4')
   expect(amount()).toBe('12 000 ₽')
   expect(wrapper.get('input[type=range]').element.value).toBe('4')
   await views.setValue('')

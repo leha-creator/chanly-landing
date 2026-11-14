@@ -3,6 +3,14 @@ import { describe, expect, it, vi } from 'vitest'
 import BaseButton from '../../src/components/BaseButton.vue'
 
 describe('BaseButton', () => {
+  it('uses a declarative tone without forwarding it as a native attribute', async () => {
+    const button = mount(BaseButton, { props: { tone: 'highlight' }, slots: { default: 'Отправить' } })
+    expect(button.classes()).toContain('button--highlight')
+    expect(button.attributes('tone')).toBeUndefined()
+    await button.setProps({ tone: 'accent' })
+    expect(button.classes()).not.toContain('button--highlight')
+  })
+
   it('fires once, retains its name while busy and works again when ready', async () => {
     const onClick = vi.fn()
     const button = mount(BaseButton, { attrs: { onClick }, slots: { default: 'Подключить канал' } })

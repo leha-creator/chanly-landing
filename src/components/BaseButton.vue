@@ -3,17 +3,34 @@ defineProps({
   type: { type: String, default: 'button' },
   disabled: Boolean,
   loading: Boolean,
+  tone: {
+    type: String,
+    default: 'accent',
+    validator: value => ['accent', 'highlight'].includes(value),
+  },
 })
 </script>
 
 <template>
-  <button class="button" :type="type" :disabled="disabled || loading" :aria-busy="loading || undefined">
-    <span v-if="loading" class="button__indicator" aria-hidden="true">…</span>
+  <button
+    class="button"
+    :class="{ 'button--highlight': tone === 'highlight' }"
+    :type="type"
+    :disabled="disabled || loading"
+    :aria-busy="loading || undefined"
+  >
+    <span
+      v-if="loading"
+      class="button__indicator"
+      aria-hidden="true"
+    >…</span>
     <slot />
   </button>
 </template>
 
 <style scoped lang="scss">
+@use '../assets/styles/tools' as styles;
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -31,19 +48,38 @@ defineProps({
   cursor: pointer;
   transition: background-color var(--motion-fast) var(--ease);
 
-  @media (hover: hover) and (pointer: fine) {
-    &:enabled:hover { background: var(--accent-hover); }
+  @include styles.hover {
+    &:enabled:hover {
+      background: var(--accent-hover);
+    }
   }
-  &:enabled:active { background: var(--accent-pressed); }
-  &:disabled { opacity: .65; cursor: default; }
-  &[aria-busy='true'] { cursor: progress; }
-  &.lime {
+
+  &:enabled:active {
+    background: var(--accent-pressed);
+  }
+
+  &:disabled {
+    opacity: .65;
+    cursor: default;
+  }
+
+  &[aria-busy='true'] {
+    cursor: progress;
+  }
+
+  &--highlight {
     background: var(--highlight);
     color: var(--ink);
-    @media (hover: hover) and (pointer: fine) {
-      &:enabled:hover { background: #d7e78b; }
+
+    @include styles.hover {
+      &:enabled:hover {
+        background: #d7e78b;
+      }
     }
-    &:enabled:active { background: #c4d775; }
+
+    &:enabled:active {
+      background: #c4d775;
+    }
   }
 }
 </style>

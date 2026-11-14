@@ -14,9 +14,9 @@ it('раскрывает каждый ответ и позволяет закр�
     await button.trigger('click')
     expect(page.findAll('[aria-expanded=true]')).toHaveLength(1)
     expect(page.get('#' + button.attributes('aria-controls')).attributes('inert')).toBeUndefined()
-    expect(page.findAll('.answer[inert]')).toHaveLength(4)
+    expect(page.findAll('.faq__answer[inert]')).toHaveLength(4)
   }
   await buttons[0].trigger('click')
-  expect(page.findAll('.answer[inert]')).toHaveLength(5)
+  expect(page.findAll('.faq__answer[inert]')).toHaveLength(5)
   page.unmount()
 })
