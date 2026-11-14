@@ -1,0 +1,25 @@
+name: chanly-landing-contact
+services:
+  contact:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        format: raw
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    pids_limit: 64
+    networks:
+      edge:
+        aliases: [chanly-landing-contact]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8091/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  edge:
+    external: true
+    name: edge

@@ -3,3 +3,5 @@ dist/
 coverage/
 .vite/
 *.local
+__pycache__/
+deploy/contact/.env

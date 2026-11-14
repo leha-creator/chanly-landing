@@ -6,6 +6,7 @@
 | --- | --- |
 | [README.md](README.md) | Установка, запуск, тесты и сборка |
 | [deploy/release.py](deploy/release.py), [deploy/tests/](deploy/tests/) | Команда SSH для выпуска и отката, проверки на Linux |
+| [deploy/contact/](deploy/contact/), [src/api/contact.js](src/api/contact.js), [docs/contact-delivery.md](docs/contact-delivery.md) | SMTP-обработчик заявок на info@chanly.ru, клиент формы и настройка REG.RU |
 | [src/main.js](src/main.js), [src/App.vue](src/App.vue) | Подключение Router, Pinia, темы и общего каркаса |
 | [src/router/index.js](src/router/index.js), [src/views/](src/views/) | Маршруты и страницы |
 | [src/components/](src/components/), [src/assets/styles/](src/assets/styles/) | Общие компоненты и SCSS-тема |

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useAttrs, useId } from 'vue'
+import FieldError from './FieldError.vue'
 
 defineOptions({ inheritAttrs: false })
 const props = defineProps({
@@ -25,7 +26,7 @@ const attrs = useAttrs()
       :aria-invalid="error ? 'true' : undefined"
       :aria-describedby="[attrs['aria-describedby'], error && inputId + '-error'].filter(Boolean).join(' ') || undefined"
     >
-    <span v-if="error" :id="inputId + '-error'" class="field__error">{{ error }}</span>
+    <FieldError v-if="error" :id="inputId + '-error'">{{ error }}</FieldError>
   </div>
 </template>
 
@@ -52,16 +53,9 @@ const attrs = useAttrs()
       &:enabled:hover { border-color: var(--accent-hover); }
     }
     &:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
-    &[aria-invalid='true'] { border-color: var(--error); }
+    &[aria-invalid='true'] { border-color: var(--error); background: var(--error-bg); }
     &[aria-invalid='true']:focus { box-shadow: inset 0 0 0 1px var(--error); }
     &:disabled { opacity: .65; }
-  }
-
-  &__error {
-    justify-self: start;
-    color: var(--error);
-    background: var(--white);
-    padding-inline: 4px;
   }
 }
 </style>

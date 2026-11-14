@@ -7,6 +7,7 @@ import IncomeSection from '../components/IncomeSection.vue'
 import TermsSection from '../components/TermsSection.vue'
 import FaqSection from '../components/FaqSection.vue'
 import ContactSection from '../components/ContactSection.vue'
+import { deliverContact } from '../api/contact.js'
 </script>
 <template>
   <HeroSection />
@@ -16,5 +17,5 @@ import ContactSection from '../components/ContactSection.vue'
   <IncomeSection />
   <TermsSection />
   <FaqSection />
-  <ContactSection />
+  <ContactSection :deliver="deliverContact" />
 </template>

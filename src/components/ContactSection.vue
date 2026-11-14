@@ -2,6 +2,7 @@
 import {useSectionReveal} from '../composables/useSectionReveal.js'
 import BaseField from './BaseField.vue'
 import BaseButton from './BaseButton.vue'
+import FieldError from './FieldError.vue'
 
 import {computed, nextTick, reactive, ref} from 'vue'
 
@@ -10,7 +11,8 @@ import {useNotifications} from '../stores/notifications.js'
 const props = defineProps({deliver: Function})
 const notices = useNotifications()
 const pending = ref(false)
-const emptyFields = () => ({name: '', email: '', question: '', consent: false})
+const deliveryError = ref('')
+const emptyFields = () => ({ name: '', email: '', question: '', consent: false })
 const fields = reactive(emptyFields())
 const attempted = ref(false)
 const problems = computed(() => ({
@@ -23,6 +25,7 @@ const errors = computed(() => attempted.value ? problems.value : {})
 
 async function submit(event) {
   if (pending.value) return
+  deliveryError.value = ''
   const form = event.currentTarget
   attempted.value = true
   const invalid = Object.keys(problems.value).find(key => problems.value[key])
@@ -42,14 +45,16 @@ async function submit(event) {
       question: fields.question.trim(), consent: fields.consent,
     })
     if (result?.delivered !== true) {
-      notices.notify('error', 'Доставка не подтверждена. Проверьте данные и попробуйте ещё раз.')
+      deliveryError.value = 'Не удалось подтвердить отправку. Попробуйте ещё раз.'
       return
     }
     notices.notify('success', 'Вопрос доставлен.')
     attempted.value = false
     Object.assign(fields, emptyFields())
-  } catch {
-    notices.notify('error', 'Не удалось отправить вопрос. Попробуйте ещё раз.')
+  } catch (error) {
+    deliveryError.value = error?.code === 'rate_limited'
+      ? 'Слишком много попыток отправки. Попробуйте позже или напишите нам на почту.'
+      : 'Не удалось отправить вопрос. Попробуйте ещё раз.'
   } finally {
     pending.value = false
   }
@@ -73,29 +78,32 @@ useSectionReveal()
         />
       </div>
       <form data-reveal novalidate @submit.prevent="submit">
-        <BaseField :disabled="pending" v-model="fields.name" name="name" required label="Ваше имя" autocomplete="name"
-                   placeholder="Как к вам обращаться" :error="errors.name"/>
-        <BaseField :disabled="pending" v-model="fields.email" name="email" required type="email"
-                   label="Электронная почта"
-                   autocomplete="email" placeholder="you@example.ru" :error="errors.email"/>
-        <div>
+        <BaseField :disabled="pending" v-model="fields.name" name="name" required maxlength="100" label="Ваше имя" autocomplete="name"
+          placeholder="Как к вам обращаться" :error="errors.name" />
+        <BaseField :disabled="pending" v-model="fields.email" name="email" required maxlength="254" type="email" label="Электронная почта"
+          autocomplete="email" placeholder="you@example.ru" :error="errors.email" />
+        <div class="question-field">
           <label for="contact-question">Вопрос</label>
-          <textarea id="contact-question" :disabled="pending" v-model="fields.question" required name="question"
-                    rows="4"
+          <textarea id="contact-question" :disabled="pending" v-model="fields.question" required maxlength="5000" name="question" rows="4"
                     placeholder="Расскажите, чем помочь" :aria-invalid="errors.question ? 'true' : undefined"
                     :aria-describedby="errors.question ? 'contact-question-error' : undefined"></textarea>
-          <span v-if="errors.question" id="contact-question-error" class="error">{{ errors.question }}</span>
+          <FieldError v-if="errors.question" id="contact-question-error">{{ errors.question }}</FieldError>
         </div>
-        <div>
+        <div class="consent-field">
           <label class="consent">
             <input :disabled="pending" v-model="fields.consent" required name="consent" type="checkbox"
                    :aria-invalid="errors.consent ? 'true' : undefined"
                    :aria-describedby="errors.consent ? 'contact-consent-error' : undefined"/>
             Согласен на обработку персональных данных и ознакомлен с политикой конфиденциальности
           </label>
-          <span v-if="errors.consent" id="contact-consent-error" class="error">{{ errors.consent }}</span>
+          <FieldError v-if="errors.consent" id="contact-consent-error">{{ errors.consent }}</FieldError>
         </div>
         <small v-if="!deliver">Отправка временно недоступна. Вы можете проверить заполнение формы.</small>
+        <div v-if="deliveryError" class="delivery-error" role="alert">
+          <strong>Вопрос пока не отправлен</strong>
+          <p>{{ deliveryError }} Введённые данные сохранены.</p>
+          <a href="mailto:info@chanly.ru">Написать на info@chanly.ru ↗</a>
+        </div>
         <BaseButton class="lime" type="submit" :loading="pending">
           {{ pending ? "Отправляем…" : deliver ? "Отправить вопрос" : "Проверить поля" }}
         </BaseButton>
@@ -165,34 +173,25 @@ textarea {
     opacity: 1;
   }
 }
-
-.error {
-  display: table;
-  margin-top: 4px;
-  background: var(--white);
+.question-field, .consent-field { display: grid; gap: 8px; }
+.question-field textarea { margin-top: 0; }
+.delivery-error {
+  padding: 16px;
+  border: 1px solid var(--error);
+  border-radius: 12px;
+  background: var(--error-bg);
   color: var(--error);
-  padding-inline: 4px;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.5;
 }
-
-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
-}
-
-textarea[aria-invalid="true"]:focus {
-  box-shadow: inset 0 0 0 1px var(--error);
-}
-
-textarea[aria-invalid="true"] {
-  border-color: var(--error);
-}
-
-textarea {
-  color: var(--ink);
-}
-
+.delivery-error strong { display: block; font-size: 15px; }
+.delivery-error p { margin: 6px 0 10px; color: inherit; font-size: inherit; }
+.delivery-error a { font-weight: 600; overflow-wrap: anywhere; }
+.delivery-error a:focus-visible { outline-color: var(--error); }
+textarea:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+textarea[aria-invalid="true"]:focus { box-shadow: inset 0 0 0 1px var(--error); }
+textarea[aria-invalid="true"] { border-color: var(--error); background: var(--error-bg); }
+textarea { color: var(--ink); }
 .consent {
   display: flex;
   align-items: start;

@@ -19,6 +19,10 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
           Вы собираете вокруг себя людей.<br />Мы помогаем превратить это в
           заработок<br class="desktop-break" /> на рекламных размещениях.
         </p>
+        <div class="commission-note">
+          <strong>0%</strong>
+          <span>Комиссия<br />для авторов</span>
+        </div>
         <div class="actions">
           <BaseButton @click="connectChannel">Подключить мой канал</BaseButton
           ><a href="#how">Посмотреть, как это работает ↗</a>
@@ -28,7 +32,7 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
         class="sculpture"
         @animationend.self="stopIntro"
         role="img"
-        aria-label="Знак Chanly, карточка канала и пример размещения на 3 000 рублей"
+        aria-label="Знак Chanly, карточка канала, комиссия для авторов 0% и пример размещения на 3 000 рублей"
       >
         <img class="orbit" src="../assets/images/orbit.svg" alt="" /><img
           class="emblem"
@@ -38,11 +42,11 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
           class="identity"
           src="../assets/images/identity.svg"
           alt=""
-        /><img class="receipt" src="../assets/images/receipt.svg" alt="" /><img
-          class="sticker"
-          src="../assets/images/sticker.svg"
-          alt=""
-        />
+        /><img class="receipt" src="../assets/images/receipt.svg" alt="" />
+        <div class="sticker">
+          <strong>0%</strong>
+          <span>Комиссия<br />для авторов</span>
+        </div>
       </div>
     </div>
   </section>
@@ -78,6 +82,18 @@ p {
   flex-wrap: wrap;
   margin-top: 42px;
 }
+.commission-note {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  margin: 28px 0;
+}
+.commission-note strong {
+  color: var(--accent);
+  font: 700 44px/1.25 var(--font-heading);
+}
+.commission-note span { font-size: 14px; line-height: 1.4; }
 .actions button {
   --button-width: 280px;
 }
@@ -119,10 +135,24 @@ p {
   top: 70.7%;
 }
 .sticker {
-  width: 26.99%;
-  left: 66.62%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 30.46%;
+  aspect-ratio: 184 / 100;
+  left: 62.91%;
   top: 5.9%;
+  border-radius: 24px;
+  background: var(--highlight);
+  color: var(--ink);
+  text-align: center;
+  transform: rotate(7deg);
 }
+.sticker strong { font: 700 clamp(22px, 2.36vw, 34px)/1.12 var(--font-heading); letter-spacing: -.03em; }
+.sticker span { font-size: clamp(8px, .764vw, 11px); line-height: 1.25; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; }
 @media (max-width: 48rem) {
   .hero {
     padding: 20px var(--gutter);
@@ -143,6 +173,10 @@ p {
     display: grid;
     gap: 20px;
   }
+  .commission-note { justify-content: center; margin: 20px 0; }
+  .sticker { width: 33.14%; left: 61.71%; aspect-ratio: 116 / 68; border-radius: 16px; gap: 2px; }
+  .sticker strong { font-size: 24px; }
+  .sticker span { font-size: 8px; }
   .desktop-break { display: none; }
   .actions button {
     --button-font: 15px;

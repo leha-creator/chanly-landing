@@ -1,5 +1,6 @@
 <script setup>
 import BaseButton from './BaseButton.vue'
+import SupportMenu from './SupportMenu.vue'
 import { connectChannel } from '../composables/useConnectChannel.js'
 </script>
 <template>
@@ -15,6 +16,7 @@ import { connectChannel } from '../composables/useConnectChannel.js'
       <nav aria-label="Разделы страницы">
         <a href="#how">Как это работает</a><a href="#income">Доход</a
         ><a href="#faq">Вопросы</a>
+        <SupportMenu />
       </nav>
       <BaseButton @click="connectChannel">Подключить канал</BaseButton>
     </div>
@@ -46,6 +48,7 @@ img {
 nav {
   font-size: 14px;
   display: flex;
+  align-items: center;
   gap: 32px;
   flex: 1;
   justify-content: center;
@@ -58,6 +61,10 @@ a {
   nav a:nth-child(1) { width: 150px; }
   nav a:nth-child(2) { width: 65px; }
   nav a:nth-child(3) { width: 90px; }
+}
+@media (min-width: 48.001rem) and (max-width: 64rem) {
+  .header-row { flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+  nav { order: 3; flex-basis: 100%; justify-content: space-between; gap: 16px; }
 }
 @media (max-width: 48rem) {
   .header { position: static; }
@@ -74,9 +81,11 @@ a {
   nav {
     order: 3;
     flex-basis: 100%;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1.25fr .65fr .85fr 1.1fr;
     gap: 4px;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.3;
   }
   nav a {
     display: grid;
