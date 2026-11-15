@@ -1,7 +1,7 @@
 <script setup>
 import BaseButton from './BaseButton.vue'
 import SupportMenu from './SupportMenu.vue'
-import { connectChannel } from '../composables/useConnectChannel.js'
+import {connectChannel} from '../composables/useConnectChannel.js'
 </script>
 <template>
   <header class="header">
@@ -33,7 +33,10 @@ import { connectChannel } from '../composables/useConnectChannel.js'
         >Вопросы</a>
         <SupportMenu />
       </nav>
-      <BaseButton @click="connectChannel">
+      <BaseButton
+        class="header__btn"
+        @click="connectChannel"
+      >
         Подключить канал
       </BaseButton>
     </div>
@@ -55,7 +58,7 @@ import { connectChannel } from '../composables/useConnectChannel.js'
     display: flex;
     align-items: center;
     gap: 3vw;
-    padding: 22px 0;
+    padding: 17px 0;
     border-bottom: 1px solid var(--rule);
   }
 
@@ -75,20 +78,45 @@ import { connectChannel } from '../composables/useConnectChannel.js'
   }
 
   &__home,
-  &__link { text-decoration: none; }
+  &__link {
+    text-decoration: none;
+  }
 
   @media (min-width: 64rem) {
-    &__nav { gap: 40px; }
+    &__nav {
+      gap: 40px;
+    }
     &__link {
-      &:nth-child(1) { width: 150px; }
-      &:nth-child(2) { width: 65px; }
-      &:nth-child(3) { width: 90px; }
+      &:nth-child(1) {
+        width: 150px;
+      }
+
+      &:nth-child(2) {
+        width: 65px;
+      }
+
+      &:nth-child(3) {
+        width: 90px;
+      }
     }
   }
 
+  &__btn {
+    min-height: 50px;
+  }
+
   @media (min-width: 48.001rem) and (max-width: 64rem) {
-    &__content { flex-wrap: wrap; justify-content: space-between; gap: 12px; }
-    &__nav { order: 3; flex-basis: 100%; justify-content: space-between; gap: 16px; }
+    &__content {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    &__nav {
+      order: 3;
+      flex-basis: 100%;
+      justify-content: space-between;
+      gap: 16px;
+    }
   }
 
   @include styles.mobile {
@@ -102,7 +130,9 @@ import { connectChannel } from '../composables/useConnectChannel.js'
       gap: 20px 4px;
     }
 
-    &__logo { width: 116px; }
+    &__logo {
+      width: 116px;
+    }
 
     &__nav {
       order: 3;

@@ -99,7 +99,7 @@ const items = [
   }
 
   &__title { font-size: clamp(34px, 4.03vw, 58px); }
-  &__intro { margin: 0; font-size: 18px; color: #606458; }
+  &__intro { margin: 0; font-size: 16px; color: #606458; }
 
   &__body {
     display: grid;
@@ -171,10 +171,12 @@ const items = [
 
   @media (max-width: 1024px) {
     &__head { grid-template-columns: 1.8fr 1fr; }
+    &__intro { font-size: 12px }
   }
 
   @media (max-width: 567px) {
     &__head { grid-template-columns: 1fr; }
+    &__intro { font-size: 16px }
   }
 }
 </style>

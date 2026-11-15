@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="031cad64-02b1-4161-8c17-fdf668355465" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/BenefitsSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BenefitsSection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ContactSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ContactSection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/FaqSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/FaqSection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HeroSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HeroSection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/IncomeSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/IncomeSection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SignalRibbon.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SignalRibbon.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SiteFooter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SiteFooter.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TermsSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TermsSection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +51,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1794416587788</updated>
-      <workItem from="1794416589566" duration="5871000" />
+      <workItem from="1794416589566" duration="8175000" />
     </task>
     <servers />
   </component>

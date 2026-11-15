@@ -185,7 +185,7 @@ onUnmounted(() => preference.removeEventListener('change', onPreference))
     &__content { grid-template-columns: 1fr; gap: 20px; }
     &__copy { margin: 20px 0; line-height: 1.4; }
     &__actions { display: grid; gap: 20px; }
-    &__commission { justify-content: center; margin: 20px 0; }
+    &__commission { margin: 20px 0; }
     &__sticker { width: 33.14%; left: 61.71%; aspect-ratio: 116 / 68; border-radius: 16px; gap: 2px; }
     &__sticker-value { font-size: 24px; }
     &__sticker-label { font-size: 8px; }
