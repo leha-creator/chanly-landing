@@ -66,7 +66,6 @@ useSectionReveal()
         class="footer__links"
         data-reveal
       >
-        <span>© Chanly, 2026</span>
         <a
           class="footer__link"
           href="#contact"
