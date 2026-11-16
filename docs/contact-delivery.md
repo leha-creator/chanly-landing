@@ -1,5 +1,27 @@
 # Заявки с лендинга
 
+## Production, 16.11.2026
+
+Лендинг опубликован на https://chanly.ru через master CI:
+https://github.com/leha-creator/chanly-landing/actions/runs/43906930241
+Ревизия первого выпуска: cbca021392dcaacfe874e104b01805da0491a379.
+HTML и все 36 ресурсов сверены по SHA-256 через HTTPS; desktop и 390 px
+проверены в браузере без ошибок консоли и отсутствующих изображений.
+
+Обработчик production установлен отдельно в
+/opt/maxim-production/landing-contact, Compose project и Docker alias —
+chanly-landing-contact-production. SMTP-конфигурация имеет права 600,
+разрешён только origin https://chanly.ru. Пароль не выводился и не хранится в Git.
+Проверены healthcheck, SMTP AUTH/NOOP (250) и отказ некорректной заявки (400)
+через публичный маршрут. Новое контрольное письмо не отправлялось;
+предыдущая проверка доставки на dev описана ниже.
+
+Перед настройкой Caddy сохранены compose.yml и прежний сайт в
+/opt/maxim-production/landing-setup/backup-20261116T161918Z (каталог 700).
+Шаблон сайта — deploy/production.caddy. При будущем выпуске бэкенда сохраните
+/api/landing/contact и /landing-assets/, добавьте выбор лендинга на корне.
+Сейчас маршруты приложения, включая /auth/login, ожидают его развёртывания.
+
 ## Состояние на 14.11.2026
 
 Отправка включена на **dev.chanly.ru**. Сервис установлен в
