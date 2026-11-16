@@ -9,6 +9,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import release
@@ -107,3 +108,38 @@ class Deployment(unittest.TestCase):
                                 capture_output=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(b"invalid release command", result.stderr)
+
+
+class ProductionSmoke(unittest.TestCase):
+    def test_public_landing_without_application_or_session(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            directory = root / "releases" / "version"
+            directory.mkdir(parents=True)
+            html = b'<script src="/landing-assets/index.js"></script>'
+            (directory / "index.html").write_bytes(html)
+            (directory / "landing-assets").mkdir()
+            (directory / "landing-assets/index.js").write_bytes(b"JS")
+            release.switch(root, "version")
+            def request(path):
+                return {"/": html, "/landing-assets/index.js": b"JS"}[path]
+            with patch.object(release, "PRODUCTION", True), patch.object(release, "request", side_effect=request):
+                release.smoke(root, "version")
+            with patch.object(release, "PRODUCTION", True), patch.object(release, "request", return_value=b"wrong"):
+                with self.assertRaisesRegex(ValueError, "HTML mismatch"):
+                    release.smoke(root, "version")
+
+    def test_first_production_release_cannot_rollback_to_empty_site(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            release.release(root, "release", 1, "first", verify)
+            with patch.object(release, "PRODUCTION", True):
+                with self.assertRaisesRegex(ValueError, "previous landing"):
+                    release.release(root, "rollback", 2, None, verify)
+            verify(root, "first")
+            self.assertEqual(json.loads((root / "state.json").read_text())["run"], 1)
+
+    def test_recovery_before_first_production_activation_needs_no_site(self):
+        with patch.object(release, "PRODUCTION", True), patch.object(release, "request") as request:
+            release.smoke(Path("/unused"), None)
+            request.assert_not_called()

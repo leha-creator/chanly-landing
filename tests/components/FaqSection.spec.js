@@ -8,15 +8,15 @@ it('раскрывает каждый ответ и позволяет закр�
   vi.stubGlobal('matchMedia', () => ({ matches: true }))
   const page = mount(FaqSection, { global: { plugins: [createPinia()] } })
   const buttons = page.findAll('button')
-  expect(buttons).toHaveLength(5)
+  expect(buttons).toHaveLength(6)
   expect(buttons[0].attributes('aria-expanded')).toBe('true')
   for (const button of buttons.slice(1).concat(buttons[0])) {
     await button.trigger('click')
     expect(page.findAll('[aria-expanded=true]')).toHaveLength(1)
     expect(page.get('#' + button.attributes('aria-controls')).attributes('inert')).toBeUndefined()
-    expect(page.findAll('.faq__answer[inert]')).toHaveLength(4)
+    expect(page.findAll('.faq__answer[inert]')).toHaveLength(buttons.length - 1)
   }
   await buttons[0].trigger('click')
-  expect(page.findAll('.faq__answer[inert]')).toHaveLength(5)
+  expect(page.findAll('.faq__answer[inert]')).toHaveLength(buttons.length)
   page.unmount()
 })

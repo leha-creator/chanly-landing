@@ -67,10 +67,10 @@ npm run dev
 | Событие | Результат |
 | --- | --- |
 | Push в `dev` | Проверки, сборка со входом через `https://dev.chanly.ru/auth/login` и автоматический выпуск на `dev.chanly.ru`. |
-| Push в `master` | Проверки и сохранение production-архива для `chanly.ru`. Кнопки подключения ведут на `https://chanly.ru/auth/login`. |
+| Push в `master` | Проверки, production-сборка и автоматический выпуск на `chanly.ru`. Кнопки подключения ведут на `https://chanly.ru/auth/login`. |
 | Pull request | Проверки и сборка с относительным адресом входа для предпросмотра. |
 
-Архив `landing.tar.gz` доступен в артефактах соответствующего запуска 14 дней. Ветка `master` собирает production-артефакт без автоматической публикации.
+Архив `landing.tar.gz` доступен в артефактах соответствующего запуска 14 дней. Ветка `master` публикует production-артефакт через GitHub Environment `production`.
 
 ### Стенд dev.chanly.ru
 
@@ -88,3 +88,24 @@ npm run dev
 HTTPS-проверка использует серверный `/opt/maxim-dev/basic-auth.curl` и файл `/opt/maxim-dev/landing-session.curl` с действующей сессией тестового кабинета. Оба файла доступны только пользователю `deploy` (0600). Когда сессия истекает, войдите в тестовый кабинет на dev обычным способом и обновите строку `cookie = "session=<значение>"` во втором файле. Проверка `/api/v1/me` остановит выпуск до переключения, если сессия уже истекла.
 
 Для полного отката трёх репозиториев сначала верните предыдущие гостевые переходы фронтенда, затем конфигурацию Caddy. Переключатель фронтенда — переменная `SHARED_LANDING` репозитория приложения, которую учитывает сборка для выпуска ветки `dev`. Инструкции владельцев — [фронтенд](https://github.com/leha-creator/chanly-frontend/blob/dev/deploy/README.md) и [бэкенд](https://github.com/leha-creator/chanly/blob/dev/deploy/app/DEV.md).
+
+
+### Production chanly.ru
+
+Push/merge dev в master запускает проверки и выпуск через Environment production.
+Для повторного выпуска или отката выберите master и release либо rollback в workflow.
+Секреты DEPLOY_SSH_KEY и DEPLOY_KNOWN_HOSTS задаются отдельно в production.
+
+На сервере /opt/maxim-production/landing-release.py — root-owned wrapper:
+он задаёт CHANLY_LANDING_ENV=production и запускает landing-release-handler.py
+из deploy/release.py. Ключ CI ограничен этим forced command.
+Статика хранится в /opt/maxim-production/frontend/landing; Caddy монтирует
+/opt/maxim-production/frontend:/srv/maxim-production:ro.
+Начальный сайт — deploy/production.caddy: публичный лендинг, /landing-assets/
+и /api/landing/contact. Маршруты приложения до его выпуска возвращают 503.
+При интеграции бэкенда сохраните маршруты лендинга.
+Проверка выпуска сверяет гостевой HTML и ресурсы по HTTPS без API и аккаунта.
+
+Выпуск и откат используют общий /opt/edge/.release.lock, атомарную ссылку
+landing/current и state.json. Откат доступен после второго выпуска:
+первую production-версию нельзя откатить в пустой сайт.

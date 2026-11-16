@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: Операция на dev.chanly.ru
+        description: Выпуск или откат окружения выбранной ветки
         type: choice
         options: [release, rollback]
         required: true
@@ -77,7 +77,7 @@ jobs:
 
   deploy:
     if: >-
-      always() && !cancelled() && github.ref == 'refs/heads/dev' &&
+      always() && !cancelled() && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master') &&
       ((github.event_name == 'push' && needs.check.result == 'success') ||
        (github.event_name == 'workflow_dispatch' &&
         ((inputs.operation == 'release' && needs.check.result == 'success') ||
@@ -86,11 +86,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     concurrency:
-      group: landing-dev-release
+      group: landing-${{ github.ref_name }}-release
       cancel-in-progress: false
     environment:
-      name: dev
-      url: https://dev.chanly.ru
+      name: ${{ github.ref == 'refs/heads/master' && 'production' || 'dev' }}
+      url: ${{ github.ref == 'refs/heads/master' && 'https://chanly.ru' || 'https://dev.chanly.ru' }}
     steps:
       - uses: actions/download-artifact@v4
         if: github.event_name == 'push' || inputs.operation == 'release'
@@ -112,7 +112,7 @@ jobs:
             input=/dev/null
             DIGEST=$(sha256sum /dev/null | cut -d' ' -f1)
           fi
-          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/dev" --jq .object.sha)" = "$GITHUB_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$GITHUB_REF_NAME" --jq .object.sha)" = "$GITHUB_SHA"
           umask 077
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/landing

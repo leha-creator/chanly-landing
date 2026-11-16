@@ -12,9 +12,10 @@ import sys
 import tarfile
 import tempfile
 
-ROOT = Path("/opt/maxim-dev/frontend/landing")
+PRODUCTION = os.environ.get("CHANLY_LANDING_ENV", "dev") == "production"
+ROOT = Path("/opt/maxim-production/frontend/landing" if PRODUCTION else "/opt/maxim-dev/frontend/landing")
 LOCK = Path("/opt/edge/.release.lock")
-SITE = "https://dev.chanly.ru"
+SITE = "https://chanly.ru" if PRODUCTION else "https://dev.chanly.ru"
 BASIC = "/opt/maxim-dev/basic-auth.curl"
 SESSION = "/opt/maxim-dev/landing-session.curl"
 
@@ -90,14 +91,24 @@ def prepare(root, staging, archive, sha, checksum):
 
 
 def request(path, session=False):
-    args = ["curl", "--disable", "--config", BASIC, "--fail", "--silent",
-            "--show-error", "--max-time", "20"]
-    if session:
+    args = ["curl", "--disable", "--fail", "--silent", "--show-error", "--max-time", "20"]
+    if not PRODUCTION:
+        args += ["--config", BASIC]
+    if session and not PRODUCTION:
         args += ["--config", SESSION]
     return subprocess.check_output([*args, SITE + path])
 
 
 def smoke(root, target):
+    if PRODUCTION:
+        if target is None:
+            # Recovery of an interrupted first release has no active site to verify.
+            return
+        expected = (root / "current/index.html").read_bytes()
+        if request("/") != expected:
+            raise ValueError("production root HTML mismatch")
+        check_assets(root, expected)
+        return
     app = (root.parent / "current/index.html").read_bytes()
     expected = (root / "current/index.html").read_bytes() if target else app
     if not json.loads(request("/api/v1/me", session=True)).get("user"):
@@ -105,10 +116,14 @@ def smoke(root, target):
     if request("/") != expected or request("/", session=True) != app:
         raise ValueError("root HTML mismatch")
     if target:
-        for ref in re.findall(rb'(?:src|href)="(/landing-assets/[^"]+)"', expected):
-            path = ref.decode()
-            if request(path) != (root / "current" / path[1:]).read_bytes():
-                raise ValueError("served asset mismatch")
+        check_assets(root, expected)
+
+
+def check_assets(root, expected):
+    for ref in re.findall(rb'(?:src|href)="(/landing-assets/[^"]+)"', expected):
+        path = ref.decode()
+        if request(path) != (root / "current" / path[1:]).read_bytes():
+            raise ValueError("served asset mismatch")
 
 
 def release(root, operation, run, target, check=smoke):
@@ -126,6 +141,8 @@ def release(root, operation, run, target, check=smoke):
         check(root, state["current"])
         return
     before = state["current"]
+    if PRODUCTION and operation == "rollback" and not state["previous"]:
+        raise ValueError("production rollback requires a previous landing release")
     if operation == "rollback":
         if not before and not state["previous"]:
             raise ValueError("no release to roll back")
@@ -167,7 +184,7 @@ def main():
                         raise ValueError("upload exceeds release limit")
         with LOCK.open("a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
-            if not json.loads(request("/api/v1/me", session=True)).get("user"):
+            if not PRODUCTION and not json.loads(request("/api/v1/me", session=True)).get("user"):
                 raise ValueError("refresh the smoke session before switching")
             target = prepare(ROOT, staging, archive, sha, checksum) if operation == "release" else None
             release(ROOT, operation, int(run), target)
