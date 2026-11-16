@@ -12,7 +12,7 @@
     "lint:fix": "npm run lint -- --fix",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "prepare": "husky",
-    "build": "npm run typecheck && vite build",
+    "build": "npm run typecheck && node scripts/check-legal.mjs && vite build",
     "preview": "vite preview",
     "test": "vitest run"
   },

@@ -13,9 +13,9 @@ it('sends the form to the same-origin endpoint and requires SMTP confirmation', 
   }))
 })
 
-it.each([429, 502, 503])('rejects HTTP %s without confirming delivery', async status => {
+it.each([409, 429, 502, 503])('rejects HTTP %s without confirming delivery', async status => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status }))
-  await expect(deliverContact(fields)).rejects.toMatchObject({ code: status === 429 ? 'rate_limited' : 'delivery_failed' })
+  await expect(deliverContact(fields)).rejects.toMatchObject({ code: status === 409 ? 'consent_outdated' : status === 429 ? 'rate_limited' : 'delivery_failed' })
 })
 
 it.each([{}, { delivered: false }])('rejects a successful HTTP response without delivery confirmation: %j', async body => {

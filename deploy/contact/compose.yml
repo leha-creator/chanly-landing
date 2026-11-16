@@ -7,6 +7,9 @@ services:
       - path: .env
         format: raw
     read_only: true
+    volumes:
+      - ./data:/data
+      - ${LANDING_ROOT:-/opt/maxim-dev/frontend/landing}:/legal:ro
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     mem_limit: 128m

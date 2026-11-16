@@ -53,7 +53,7 @@ def prepare(root, staging, archive, sha, checksum):
             name = member.name.removeprefix("./")
             if member.isdir() and name in (".", "", "landing-assets"):
                 continue
-            if not member.isfile() or not re.fullmatch(r"index\.html|landing-assets/[\w.-]+", name):
+            if not member.isfile() or not re.fullmatch(r"index\.html|legal-manifest\.json|(?:offer|offer-author|rules|privacy_policy|consent-feedback|requisites)\.pdf|landing-assets/[\w.-]+", name):
                 raise ValueError("unexpected archive entry")
             total += member.size
             if total > 128 * 1024 * 1024:
@@ -62,6 +62,7 @@ def prepare(root, staging, archive, sha, checksum):
             dest.parent.mkdir(exist_ok=True)
             with dest.open("xb") as out, package.extractfile(member) as src:
                 shutil.copyfileobj(src, out)
+    validate_documents(files)
     html = (files / "index.html").read_text()
     assets = list((files / "landing-assets").iterdir())
     refs = re.findall(r'(?:src|href)="(/landing-assets/[^"]+)"', html)
@@ -88,6 +89,42 @@ def prepare(root, staging, archive, sha, checksum):
     else:
         files.rename(release)
     return target
+
+
+def validate_documents(files):
+    manifest = files / "legal-manifest.json"
+    if not manifest.exists():
+        if list(files.glob("*.pdf")):
+            raise ValueError("legal documents require a manifest")
+        return
+    data = json.loads(manifest.read_text())
+    documents = data["documents"]
+    expected = {"offer", "offer-author", "rules", "privacy_policy", "consent-feedback", "requisites"}
+    if {d["id"] for d in documents} != expected or len(documents) != len(expected):
+        raise ValueError("unexpected legal document set")
+    for document in documents:
+        name, checksum = document["id"], document["sha256"]
+        if not re.fullmatch(r"[a-f0-9]{64}", checksum):
+            raise ValueError("invalid document digest")
+        expected_asset = f"/landing-assets/{name}-{checksum}.pdf"
+        if document["asset"] != expected_asset or document["href"] != f"/{name}.pdf":
+            raise ValueError("invalid document path")
+        pdf = files / (name + ".pdf")
+        if not pdf.read_bytes().startswith(b"%PDF-") or digest(pdf) != checksum:
+            raise ValueError("document digest mismatch")
+        if (files / expected_asset[1:]).read_bytes() != pdf.read_bytes():
+            raise ValueError("versioned PDF differs")
+
+
+def check_documents(root):
+    manifest = root / "current/legal-manifest.json"
+    if not manifest.exists():
+        return
+    for document in json.loads(manifest.read_text())["documents"]:
+        expected = (root / "current" / (document["id"] + ".pdf")).read_bytes()
+        for path in [document["href"], "/" + document["id"], document["asset"]]:
+            if request(path) != expected:
+                raise ValueError("served PDF mismatch")
 
 
 def request(path, session=False):
@@ -120,6 +157,7 @@ def smoke(root, target):
 
 
 def check_assets(root, expected):
+    check_documents(root)
     for ref in re.findall(rb'(?:src|href)="(/landing-assets/[^"]+)"', expected):
         path = ref.decode()
         if request(path) != (root / "current" / path[1:]).read_bytes():

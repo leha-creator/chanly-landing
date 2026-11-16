@@ -2,6 +2,7 @@ import { afterEach, expect, it, vi } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import ContactSection from '../../src/components/ContactSection.vue'
+import { feedbackConsent } from '../../src/data/legal.js'
 import { useNotifications } from '../../src/stores/notifications.js'
 
 let page
@@ -54,7 +55,7 @@ it.each(['reject', 'unconfirmed', 'refused'])('обрабатывает %s и п
   await page.get('form').trigger('submit')
   await page.get('form').trigger('submit')
   expect(deliver).toHaveBeenCalledTimes(1)
-  expect(deliver).toHaveBeenCalledWith({ name: 'Анна', email: 'anna@example.org', question: 'Вопрос о канале', consent: true })
+  expect(deliver).toHaveBeenCalledWith({ name: 'Анна', email: 'anna@example.org', question: 'Вопрос о канале', consent: true, consent_version: feedbackConsent.version, consent_sha256: feedbackConsent.sha256 })
   expect(page.get('button').attributes('aria-busy')).toBe('true')
   expect(notices.messages).toHaveLength(0)
   if (failure === 'reject') reject(new Error('offline'))
@@ -70,4 +71,26 @@ it.each(['reject', 'unconfirmed', 'refused'])('обрабатывает %s и п
   expect(notices.messages[0].type).toBe('success')
   expect(page.find('[role=alert]').exists()).toBe(false)
   expect(page.get('textarea').element.value).toBe('')
+})
+
+it('offers a separate PDF consent, starts unchecked and blocks submission without agreement', async () => {
+  const deliver = vi.fn()
+  render(deliver)
+  expect(page.get('[type=checkbox]').element.checked).toBe(false)
+  expect(page.get('.contact__consent a').attributes('href')).toBe(feedbackConsent.asset)
+  expect(page.get('.contact__policy a').attributes('href')).toBe('/privacy_policy.pdf')
+  await fill()
+  await page.get('[type=checkbox]').setValue(false)
+  await page.get('form').trigger('submit')
+  expect(deliver).not.toHaveBeenCalled()
+  expect(page.get('[type=checkbox]').attributes('aria-invalid')).toBe('true')
+})
+it('asks to read the current consent after a version conflict and retains the question', async () => {
+  render(vi.fn().mockRejectedValue({ code: 'consent_outdated' }))
+  await fill()
+  await page.get('form').trigger('submit')
+  await flushPromises()
+  expect(page.get('[role=alert]').text()).toContain('Редакция согласия обновилась')
+  expect(page.get('textarea').element.value).toBe(' Вопрос о канале ')
+  expect(notices.messages).toHaveLength(0)
 })

@@ -3,6 +3,7 @@ import {useSectionReveal} from '../composables/useSectionReveal.js'
 import BaseButton from './BaseButton.vue'
 import BaseHeading from './BaseHeading.vue'
 import {connectChannel} from '../composables/useConnectChannel.js'
+import { legalDocuments } from '../data/legal.js'
 
 useSectionReveal()
 </script>
@@ -30,10 +31,43 @@ useSectionReveal()
         </BaseButton>
       </div>
       <div
+        class="footer__legal"
         data-reveal
-        class="footer__links"
       >
-        <span>© Chanly, 2026</span><span>Политика конфиденциальности</span><span>Условия использования</span><a
+        <div class="footer__company">
+          <p><strong>ИП Каргин Данил Михайлович</strong></p>
+          <p>ИНН 730204905616<br>ОГРНИП 326730000073523</p>
+          <p>
+            Общие вопросы: <a href="mailto:info@chanly.ru">info@chanly.ru</a><br>
+            Поддержка: <a href="mailto:support@chanly.ru">support@chanly.ru</a><br>
+            Партнёрство: <a href="mailto:partners@chanly.ru">partners@chanly.ru</a>
+          </p>
+          <details>
+            <summary>Банковские реквизиты</summary>
+            <p>АО «ТБанк»<br>Расчётный счёт 40802810300010250129<br>БИК 044525974<br>Корреспондентский счёт 30101810145250000974</p>
+          </details>
+        </div>
+        <nav aria-label="Документы Chanly">
+          <ul class="footer__documents">
+            <li
+              v-for="document in legalDocuments"
+              :key="document.id"
+            >
+              <a
+                :href="document.href"
+                target="_blank"
+                rel="noopener"
+              >{{ document.title }} <span class="footer__format">PDF ↗</span></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div
+        class="footer__links"
+        data-reveal
+      >
+        <span>© Chanly, 2026</span>
+        <a
           class="footer__link"
           href="#contact"
         >Задать вопрос ↗</a>
@@ -67,7 +101,16 @@ useSectionReveal()
 
   &__link { text-decoration: none; }
 
+  &__legal { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; border-top: 1px solid #66685f; margin-top: 40px; padding-top: 32px; font-size: 14px; line-height: 1.6; }
+  &__company p { margin: 0 0 16px; }
+  &__company summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  &__company details p { margin-top: 12px; overflow-wrap: anywhere; }
+  &__documents { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  &__documents a { text-underline-offset: 4px; }
+  &__format { white-space: nowrap; font-size: 11px; opacity: .75; }
+
   @include styles.mobile {
+    &__legal { grid-template-columns: 1fr; gap: 28px; }
     &__invitation,
     &__links {
       align-items: flex-start;

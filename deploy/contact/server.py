@@ -16,6 +16,11 @@ import threading
 import time
 from urllib.parse import urlsplit
 
+if __package__:
+    from .consent import ConsentRegistry, ConsentMismatch
+else:
+    from consent import ConsentRegistry, ConsentMismatch
+
 RECIPIENT = "info@chanly.ru"
 ENDPOINT = "/api/landing/contact"
 MAX_BODY = 32_768
@@ -102,8 +107,11 @@ def send_email(settings, fields):
     message["Subject"] = "Заявка с лендинга Chanly"
     message["Date"] = formatdate(localtime=False)
     message["Message-ID"] = make_msgid(domain="chanly.ru")
+    receipt = fields["receipt"]
     message.set_content(f"Имя: {fields['name']}\nПочта: {fields['email']}\n\n"
-                        f"Вопрос:\n{fields['question']}\n\nСогласие на обработку данных: дано.\n")
+                        f"Вопрос:\n{fields['question']}\n\nСогласие на обработку данных: дано.\n"
+                        f"Редакция: {receipt['version']}\nSHA-256 PDF: {receipt['sha256']}\n"
+                        f"Дата UTC: {receipt['accepted_at']}\nID: {receipt['id']}\nIP: {receipt['client_ip']}\n")
     with smtplib.SMTP_SSL(settings.host, settings.port, timeout=8,
                           context=ssl.create_default_context()) as smtp:
         smtp.login(settings.user, settings.password)
@@ -113,7 +121,8 @@ def send_email(settings, fields):
 
 
 class ContactService:
-    def __init__(self, settings, sender=send_email, limiter=None):
+    def __init__(self, settings, sender=send_email, limiter=None, registry=None):
+        self.registry = registry or ConsentRegistry()
         self.settings = settings
         self.sender = sender
         self.limiter = limiter or RateLimiter()
@@ -129,13 +138,26 @@ class ContactService:
         if len(raw) > MAX_BODY:
             return 413, {"error": "body_too_large"}
         try:
-            fields = validate(json.loads(raw))
+            data = json.loads(raw)
+            fields = validate(data)
         except (ValueError, UnicodeError, RecursionError):
             return 400, {"error": "invalid_fields"}
         if not self.slots.acquire(blocking=False):
             return 503, {"error": "busy"}
         try:
-            self.sender(self.settings, fields)
+            try:
+                receipt = self.registry.record(data, fields, client, headers["Origin"])
+            except ConsentMismatch:
+                return 409, {"error": "consent_outdated"}
+            except Exception:
+                LOG.warning("Consent evidence unavailable")
+                return 503, {"error": "consent_unavailable"}
+            try:
+                self.sender(self.settings, fields | {"receipt": receipt})
+            except Exception:
+                self.mark_delivery(receipt, "failed")
+                raise
+            self.mark_delivery(receipt, "delivered")
         except Exception:
             # SMTP exceptions may contain addresses or the message. Do not log them.
             LOG.warning("SMTP delivery failed")
@@ -143,6 +165,14 @@ class ContactService:
         finally:
             self.slots.release()
         return 200, {"delivered": True}
+
+
+    def mark_delivery(self, receipt, status):
+        try:
+            self.registry.mark(receipt, status)
+        except Exception:
+            # Evidence was already committed before SMTP. Do not resend an accepted message.
+            LOG.warning("Consent delivery status unavailable")
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -200,6 +230,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    os.umask(0o077)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     Handler.service = ContactService(Settings.from_env())
     server = ThreadingHTTPServer((os.environ.get("CONTACT_BIND", "127.0.0.1"), 8091), Handler)

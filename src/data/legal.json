@@ -1,0 +1,48 @@
+{
+  "version": "2026-11-16.1",
+  "publishedAt": "2026-11-16",
+  "documents": [
+    {
+      "id": "consent-feedback",
+      "title": "Согласие для формы обратной связи",
+      "href": "/consent-feedback.pdf",
+      "asset": "/landing-assets/consent-feedback-d431bf4e6f625e400532bd1ffc2ca4f43e553edbad4fcc16e13e2b7d29be2c67.pdf",
+      "sha256": "d431bf4e6f625e400532bd1ffc2ca4f43e553edbad4fcc16e13e2b7d29be2c67"
+    },
+    {
+      "id": "offer-author",
+      "title": "Оферта автору",
+      "href": "/offer-author.pdf",
+      "asset": "/landing-assets/offer-author-237f25897cc2f0218b25208cfb27524f44b271ef1138ee35e1d164de2359427f.pdf",
+      "sha256": "237f25897cc2f0218b25208cfb27524f44b271ef1138ee35e1d164de2359427f"
+    },
+    {
+      "id": "offer",
+      "title": "Оферта рекламодателю",
+      "href": "/offer.pdf",
+      "asset": "/landing-assets/offer-15ec9b61f4057ce0ec4cf7b92a88bf3d986c8038adafe7a652b64021042421b7.pdf",
+      "sha256": "15ec9b61f4057ce0ec4cf7b92a88bf3d986c8038adafe7a652b64021042421b7"
+    },
+    {
+      "id": "privacy_policy",
+      "title": "Политика обработки персональных данных",
+      "href": "/privacy_policy.pdf",
+      "asset": "/landing-assets/privacy_policy-0e42c0ce24ba086693ea5dcf90aa0ddd31dbfcca992dccfd02546452bb30b26a.pdf",
+      "sha256": "0e42c0ce24ba086693ea5dcf90aa0ddd31dbfcca992dccfd02546452bb30b26a"
+    },
+    {
+      "id": "requisites",
+      "title": "Реквизиты ИП",
+      "href": "/requisites.pdf",
+      "asset": "/landing-assets/requisites-98e0651a4641f746d15d874420288b710a46c6492675e631ed0c70d73b730978.pdf",
+      "sha256": "98e0651a4641f746d15d874420288b710a46c6492675e631ed0c70d73b730978"
+    },
+    {
+      "id": "rules",
+      "title": "Правила пользования сервисом",
+      "href": "/rules.pdf",
+      "asset": "/landing-assets/rules-132a0d2e90cafb6de2296c53919464af2664a151b0dcc0dd9a1486e3cc0a604c.pdf",
+      "sha256": "132a0d2e90cafb6de2296c53919464af2664a151b0dcc0dd9a1486e3cc0a604c"
+    }
+  ]
+}

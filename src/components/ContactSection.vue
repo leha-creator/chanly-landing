@@ -4,6 +4,7 @@ import {useSectionReveal} from '../composables/useSectionReveal.js'
 import BaseField from './BaseField.vue'
 import BaseButton from './BaseButton.vue'
 import FieldError from './FieldError.vue'
+import { feedbackConsent } from '../data/legal.js'
 
 import {computed, nextTick, reactive, ref} from 'vue'
 
@@ -44,6 +45,7 @@ async function submit(event) {
     const result = await props.deliver({
       name: fields.name.trim(), email: fields.email.trim(),
       question: fields.question.trim(), consent: fields.consent,
+      consent_version: feedbackConsent.version, consent_sha256: feedbackConsent.sha256,
     })
     if (result?.delivered !== true) {
       deliveryError.value = 'Не удалось подтвердить отправку. Попробуйте ещё раз.'
@@ -53,7 +55,9 @@ async function submit(event) {
     attempted.value = false
     Object.assign(fields, emptyFields())
   } catch (error) {
-    deliveryError.value = error?.code === 'rate_limited'
+    deliveryError.value = error?.code === 'consent_outdated'
+      ? 'Редакция согласия обновилась. Обновите страницу, прочитайте новый документ и подтвердите согласие ещё раз.'
+      : error?.code === 'rate_limited'
       ? 'Слишком много попыток отправки. Попробуйте позже или напишите нам на почту.'
       : 'Не удалось отправить вопрос. Попробуйте ещё раз.'
   } finally {
@@ -158,8 +162,21 @@ useSectionReveal()
               :aria-invalid="errors.consent ? 'true' : undefined"
               :aria-describedby="errors.consent ? 'contact-consent-error' : undefined"
             >
-            Согласен на обработку персональных данных и ознакомлен с политикой конфиденциальности
+            <span>Даю
+              <a
+                :href="feedbackConsent.asset"
+                target="_blank"
+                rel="noopener"
+              >согласие на обработку персональных данных (PDF)</a></span>
           </label>
+          <p class="contact__policy">
+            Как мы обрабатываем данные:
+            <a
+              href="/privacy_policy.pdf"
+              target="_blank"
+              rel="noopener"
+            >политика обработки персональных данных (PDF)</a>.
+          </p>
           <FieldError
             v-if="errors.consent"
             id="contact-consent-error"
@@ -244,6 +261,8 @@ useSectionReveal()
     overflow-wrap: anywhere;
     &:focus-visible { outline-color: var(--error); }
   }
+  &__policy { margin: 0; font-size: 12px; line-height: 1.5; }
+
   &__consent {
     display: flex;
     align-items: start;

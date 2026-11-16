@@ -12,7 +12,7 @@ export async function deliverContact(fields) {
     })
     if (!response.ok) {
       const error = new Error('Contact delivery failed')
-      error.code = response.status === 429 ? 'rate_limited' : 'delivery_failed'
+      error.code = response.status === 409 ? 'consent_outdated' : response.status === 429 ? 'rate_limited' : 'delivery_failed'
       throw error
     }
     const result = await response.json()
