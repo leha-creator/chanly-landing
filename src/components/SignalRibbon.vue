@@ -59,7 +59,7 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
     @include styles.mobile {
       display: flex;
       flex: none;
-      width: max-content;
+      width: fit-content;
       min-width: max-content;
       padding: 12px;
       gap: 16px;
