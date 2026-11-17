@@ -58,7 +58,7 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
 
     @include styles.mobile {
       display: flex;
-      flex: 0 0 auto;
+      flex: none;
       width: max-content;
       min-width: max-content;
       padding: 12px;
@@ -66,6 +66,11 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
       font: 700 16px / 1.4 var(--font-heading);
       white-space: nowrap;
     }
+  }
+
+  &__word {
+    flex: none;
+    white-space: nowrap;
   }
 
   &__arrow {
@@ -88,6 +93,7 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
     @include styles.mobile {
       &__repeat {
         width: 100vw;
+        min-width: unset;
         gap: clamp(2px, 1vw, 8px);
         justify-content: space-between;
         font-size: clamp(12px, 3.65vw, 16px);
