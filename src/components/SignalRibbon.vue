@@ -66,6 +66,11 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
       font: 700 16px / 1.4 var(--font-heading);
       white-space: nowrap;
     }
+
+    @media(max-width:475px){
+      width: fit-content;
+      min-width: max-content;
+    }
   }
 
   &__word {
