@@ -56,7 +56,7 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
     letter-spacing: -0.03em;
     text-align: center;
 
-    @include styles.mobile {
+    @media(max-width:575px){
       display: flex;
       flex: none;
       width: fit-content;
@@ -65,11 +65,6 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
       gap: 16px;
       font: 700 16px / 1.4 var(--font-heading);
       white-space: nowrap;
-    }
-
-    @media(max-width:475px){
-      width: fit-content;
-      min-width: max-content;
     }
   }
 
