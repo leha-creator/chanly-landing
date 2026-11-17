@@ -42,10 +42,6 @@ useSectionReveal()
             Поддержка: <a href="mailto:support@chanly.ru">support@chanly.ru</a><br>
             Партнёрство: <a href="mailto:partners@chanly.ru">partners@chanly.ru</a>
           </p>
-          <details>
-            <summary>Банковские реквизиты</summary>
-            <p>АО «ТБанк»<br>Расчётный счёт 40802810300010250129<br>БИК 044525974<br>Корреспондентский счёт 30101810145250000974</p>
-          </details>
         </div>
         <nav aria-label="Документы Chanly">
           <ul class="footer__documents">

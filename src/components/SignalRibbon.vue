@@ -58,11 +58,13 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
 
     @include styles.mobile {
       display: flex;
-      min-width: unset;
+      flex: 0 0 auto;
+      width: max-content;
+      min-width: max-content;
       padding: 12px;
-      line-height: 1.4;
       gap: 16px;
-      font-size: 16px;
+      font: 700 16px / 1.4 var(--font-heading);
+      white-space: nowrap;
     }
   }
 
