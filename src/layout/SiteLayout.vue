@@ -8,6 +8,7 @@ import BackToTop from '../components/BackToTop.vue'
 
 import NotificationStack from '../components/NotificationStack.vue'
 import CookieNotice from '../components/CookieNotice.vue'
+import SupportMenu from '../components/SupportMenu.vue'
 
 const { reduced, pastHero } = useLandingNavigation()
 const scrollOptions = { lerp: 0.085 }
@@ -28,6 +29,10 @@ const scrollOptions = { lerp: 0.085 }
       :visible="pastHero"
     />
     <NotificationStack class="overlays__notifications" />
+    <SupportMenu
+      class="overlays__support"
+      floating
+    />
     <CookieNotice class="overlays__cookies" />
   </div>
 </template>
@@ -44,9 +49,10 @@ const scrollOptions = { lerp: 0.085 }
   gap: 12px;
   pointer-events: none;
 
-  &__back { grid-area: 1 / 1; margin-bottom: 4px; }
+  &__back { grid-area: 2 / 1; margin-bottom: 4px; }
   &__notifications { grid-area: 1 / 3; justify-self: end; }
-  &__cookies { grid-area: 1 / 2; position: relative; left: 4px; }
+  &__support { grid-area: 2 / 3; justify-self: end; }
+  &__cookies { grid-area: 1 / 2 / 3 / 3; position: relative; left: 4px; }
 
   @media (max-width: 82rem) {
     inset: auto max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
@@ -55,13 +61,16 @@ const scrollOptions = { lerp: 0.085 }
 
     &__back { margin-bottom: 0; }
     &__notifications { grid-area: 1 / 2; }
+    &__support { grid-area: 2 / 2; }
     &__cookies {
-      grid-row: 2;
+      grid-row: 3;
       grid-column: 1 / -1;
       left: auto;
       width: min(100%, 592px);
       justify-self: center;
     }
+
+    &:has(.overlays__cookies) { --support-panel-height: max(44px, calc(100dvh - 360px)); }
   }
 
   @include styles.mobile {

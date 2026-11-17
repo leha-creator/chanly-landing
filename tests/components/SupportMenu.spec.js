@@ -26,3 +26,33 @@ it('enables the MAX link when its address is supplied', async () => {
   await page.get('button').trigger('click')
   expect(page.findAll('a').map(a => a.attributes('href'))).toEqual(['https://t.me/sup_chanly', 'https://max.ru/test-support'])
 })
+
+it('shows the floating panel and closes after choosing a messenger or resizing', async () => {
+  page = mount(SupportMenu, { props: { floating: true }, attachTo: globalThis.document.body })
+  const button = page.get('button[aria-label="Поддержка"]')
+  await button.trigger('click')
+  expect(page.get('h2').text()).toBe('Мы на связи')
+  expect(page.get('[aria-disabled=true]').text()).toContain('Ссылка пока недоступна')
+  expect(page.get('a').attributes('target')).toBe('_blank')
+  expect(page.get('a').attributes('rel')).toBe('noopener noreferrer')
+  await page.get('a').trigger('click')
+  expect(button.attributes('aria-expanded')).toBe('false')
+  await button.trigger('click')
+  globalThis.dispatchEvent(new globalThis.Event('resize'))
+  await page.vm.$nextTick()
+  expect(button.attributes('aria-expanded')).toBe('false')
+})
+
+it('disables unsafe or empty messenger URLs', async () => {
+  page = mount(SupportMenu, { props: { floating: true, telegramUrl: '', maxUrl: 'javascript:alert(1)' } })
+  await page.get('button').trigger('click')
+  expect(page.findAll('a')).toHaveLength(0)
+  expect(page.findAll('[aria-disabled=true]')).toHaveLength(2)
+})
+
+it('closes when keyboard focus leaves the widget', async () => {
+  page = mount(SupportMenu, { props: { floating: true }, attachTo: globalThis.document.body })
+  await page.get('button').trigger('click')
+  await page.get('a').trigger('focusout', { relatedTarget: globalThis.document.body })
+  expect(page.find('ul').exists()).toBe(false)
+})
