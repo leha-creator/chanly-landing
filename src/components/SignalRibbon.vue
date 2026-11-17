@@ -56,21 +56,12 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
     letter-spacing: -0.03em;
     text-align: center;
 
-    @media(max-width:575px){
-      display: flex;
-      flex: none;
-      width: fit-content;
-      min-width: max-content;
+    @include styles.mobile {
       padding: 12px;
+      line-height: 1.4;
       gap: 16px;
-      font: 700 16px / 1.4 var(--font-heading);
-      white-space: nowrap;
+      font-size: 16px;
     }
-  }
-
-  &__word {
-    flex: none;
-    white-space: nowrap;
   }
 
   &__arrow {
@@ -93,7 +84,6 @@ const words = ['КОНТЕНТ', 'АУДИТОРИЯ', 'РЕКЛАМА', 'ДОХ
     @include styles.mobile {
       &__repeat {
         width: 100vw;
-        min-width: unset;
         gap: clamp(2px, 1vw, 8px);
         justify-content: space-between;
         font-size: clamp(12px, 3.65vw, 16px);
